@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #0a0a0a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Colores Extraídos de style.css */
+  --color-pedal-bgMain: #0a0a0a;
+  --color-pedal-bgSurface: #111111;
+  --color-pedal-bgCard: #161616;
+  --color-pedal-bgInput: rgba(17, 17, 17, 0.75);
+
+  --color-pedal-primary: #D97706;
+  --color-pedal-primary-glow: #F59E0B;
+  --color-pedal-primary-text: #0a0a0a;
+
+  --color-pedal-accent: #A8A29E;
+  --color-pedal-accent-glow: #F5F0EB;
+  
+  --color-pedal-textMain: #FAF7F2;
+  --color-pedal-textMuted: #C4BDB5;
+  --color-pedal-textHeading: #FFFFFF;
+
+  --color-pedal-glassBg: rgba(17, 17, 17, 0.88);
+  --color-pedal-glassBorder: rgba(245, 158, 11, 0.12);
+  --color-pedal-glassHighlight: rgba(245, 158, 11, 0.18);
+  --color-pedal-cardHoverBg: rgba(217, 119, 6, 0.04);
+  --color-pedal-sectionAltBg: #0d0d0d;
+  --color-pedal-footerBg: #080808;
+
+  --color-pedal-scrollbarThumb: rgba(255, 255, 255, 0.15);
+  --color-pedal-scrollbarHover: rgba(255, 255, 255, 0.30);
+  --color-pedal-bodyGrad1: rgba(217, 119, 6, 0.07);
+  --color-pedal-bodyGrad2: rgba(245, 158, 11, 0.04);
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Animaciones Extraídas */
+  --animate-fade-up-anim: fadeUpAnim 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  @keyframes fadeUpAnim {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  --animate-subtle-zoom: subtleZoom 20s ease-out infinite alternate;
+  @keyframes subtleZoom {
+    0% { transform: scale(1.02); }
+    100% { transform: scale(1.08); }
+  }
+
+  --animate-marquee-scroll: marqueeScroll 35s linear infinite;
+  @keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  --animate-skeleton-loading: skeleton-loading 1.5s infinite;
+  @keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  --animate-fade-up: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  --animate-fade-in: fadeIn 0.3s ease-out forwards;
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  --animate-slide-up: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  --animate-dropdown-fade: dropdownFadeIn 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  @keyframes dropdownFadeIn {
+    from { opacity: 0; transform: scale(0.96) translateY(-8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  --animate-badge-pulse: badge-pulse 2s infinite;
+  @keyframes badge-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.5); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(217, 119, 6, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+  }
+
+  --animate-scroll-marquee-premium: scrollMarqueePremium 25s linear infinite;
+  @keyframes scrollMarqueePremium {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  --animate-bg-zoom: bgZoom 20s infinite alternate ease-in-out;
+  @keyframes bgZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+  }
+
+  --animate-spinner: spinner 0.8s linear infinite;
+  @keyframes spinner {
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* Backward compatibility aliases for style.css */
+:root {
+  --bg-deep: var(--color-bg-deep);
+  --bg-surface: var(--color-bg-surface);
+  --bg-card: var(--color-bg-card);
+  --bg-input: var(--color-bg-input);
+
+  --primary: var(--color-primary);
+  --primary-glow: var(--color-primary-glow);
+  --primary-text: var(--color-primary-text);
+
+  --accent: var(--color-accent);
+  --accent-glow: var(--color-accent-glow);
+  
+  --text-main: var(--color-text-main);
+  --text-muted: var(--color-text-muted);
+  --text-heading: var(--color-text-heading);
+
+  --glass-bg: var(--color-glass-bg);
+  --glass-border: var(--color-glass-border);
+  --glass-highlight: var(--color-glass-highlight);
+  --card-hover-bg: var(--color-card-hover-bg);
+  --section-alt-bg: var(--color-section-alt-bg);
+  --footer-bg: var(--color-footer-bg);
+
+  --scrollbar-thumb: var(--color-scrollbar-thumb);
+  --scrollbar-hover: var(--color-scrollbar-hover);
+
+  --body-grad-1: var(--color-body-grad-1);
+  --body-grad-2: var(--color-body-grad-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
