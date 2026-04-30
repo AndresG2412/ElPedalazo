@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Settings, Activity, UserCog, Calendar, ChevronDown } from 'lucide-react';
 import Container from './Container';
+import Swal from 'sweetalert2';
 
 export default function Performance() {
   const [formData, setFormData] = useState({
@@ -17,12 +18,20 @@ export default function Performance() {
       alert("Por favor, completa todos los campos.");
       return;
     }
-    alert("¡Solicitud enviada correctamente! (Simulación)");
+    Swal.fire({
+      title: '¡Solicitud enviada!',
+      text: 'Tu solicitud fue enviada. Serás contactado prontamente para ajustar la hora de tu cita.',
+      icon: 'success',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#f59e0b',
+      background: '#111',
+      color: '#f4f4f5'
+    });
     setFormData({ nombre: '', telefono: '', servicio: '' });
   };
 
   return (
-    <section className="py-24 bg-[#050505]" id="performance">
+    <section className="py-24 bg-[#050505]" id="servicios">
       <Container>
         <div className='max-w-5xl mx-auto'>
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center gap-4">
@@ -99,12 +108,20 @@ export default function Performance() {
                 />
 
                 <input
-                    type="tel"
-                    placeholder="WhatsApp / Teléfono"
-                    required
-                    className="w-full text-sm bg-[#111] border border-[#27272a] rounded-sm px-3 py-2 text-[#f4f4f5] placeholder:text-[#52525b] focus:outline-none focus:border-[#f59e0b] transition-colors font-sans"
-                    value={formData.telefono}
-                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                  type="tel"
+                  placeholder="WhatsApp / Teléfono (10 dígitos)"
+                  required
+                  className="w-full text-sm bg-[#111] border border-[#27272a] rounded-sm px-3 py-2 text-[#f4f4f5] placeholder:text-[#52525b] focus:outline-none focus:border-[#f59e0b] transition-colors font-sans"
+                  value={formData.telefono}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    // Solo permite números y un máximo de 10 caracteres
+                    if (/^\d*$/.test(val) && val.length <= 10) {
+                      setFormData({ ...formData, telefono: val });
+                    }
+                  }}
+                  minLength={10} // Validación nativa al intentar enviar el formulario
+                  maxLength={10} // Evita que escriban más de 10
                 />
 
                 <div className="relative">

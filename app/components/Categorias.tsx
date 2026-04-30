@@ -1,49 +1,6 @@
 import Image from "next/image";
-import { Mountain, Wind, Map, Shield, Zap } from "lucide-react";
 import Container from "./Container";
-import imgMontaña from "@/app/images/mtb_premium.png"
-import imgGravel from "@/app/images/road_premium.png"
-import imgAccesorios from "@/app/images/scott-accessories.png"
-import imgBikeE from "@/app/images/scott-ebike.png"
-import imgScott from "@/app/images/scott-gravel.png"
-
-const categories = [
-  {
-    title: "Montaña (MTB)",
-    description: "XC, trail y enduro. Domina cualquier terreno con precisión.",
-    icon: Mountain,
-    className: "col-span-1 md:col-span-2 row-span-1",
-    image: imgMontaña,
-  },
-  {
-    title: "Ruta",
-    description: "Aerodinámica y velocidad en el asfalto.",
-    icon: Wind,
-    className: "col-span-1 row-span-1",
-    image: imgScott,
-  },
-  {
-    title: "E-Bikes",
-    description: "El futuro es hoy. Asistencia eléctrica para cruzar horizontes sin límites.",
-    icon: Zap,
-    className: "col-span-1 md:col-span-1 md:row-span-2",
-    image: imgBikeE,
-  },
-  {
-    title: "Gravel",
-    description: "Versatilidad en caminos mixtos.",
-    icon: Map,
-    className: "col-span-1 row-span-1",
-    image: imgGravel,
-  },
-  {
-    title: "Accesorios Premium",
-    description: "Cascos, luces, indumentaria y herramientas vitales.",
-    icon: Shield,
-    className: "col-span-1 md:col-span-2 row-span-1",
-    image: imgAccesorios,
-  },
-];
+import { CATEGORIAS } from "@/app/Constants/data";
 
 export default function Categorias() {
   return (
@@ -57,7 +14,7 @@ export default function Categorias() {
         </div>
 
         <div className="grid grid-cols-1 h-[500px] md:grid-cols-4 md:grid-rows-2 gap-4 md:gap-6 auto-rows-[300px]">
-          {categories.map((cat, idx) => (
+          {CATEGORIAS.map((cat, idx) => (
             <div
               key={idx}
               className={`group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5 cursor-pointer ${cat.className}`}
@@ -68,6 +25,8 @@ export default function Categorias() {
                   src={cat.image}
                   alt={cat.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={idx === 0}
                   className="object-cover opacity-20 transition-all duration-700 ease-in-out group-hover:scale-[102%] group-hover:opacity-40"
                 />
               </div>

@@ -6,7 +6,7 @@ import Container from './Container';
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-[120vh] overflow-hidden px-2 md:px-5">
+    <section className="relative w-full h-[120vh] overflow-hidden px-2 md:px-5" id='inicio'>
       {/* Imagen de fondo */}
       <Image
         src={bgImage}
