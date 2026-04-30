@@ -6,7 +6,7 @@ import Container from './Container';
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-screen overflow-hidden px-2 md:px-5">
+    <section className="relative w-full h-[120vh] overflow-hidden px-2 md:px-5">
       {/* Imagen de fondo */}
       <Image
         src={bgImage}
@@ -28,7 +28,7 @@ export default function Hero() {
       />
 
       {/* Contenido */}
-      <div className="relative z-10 flex  items-center h-full md:pt-52 ">
+      <div className="relative z-10 flex  items-center h-full md:pt-16 ">
         <Container>
           <div className="max-w-[800px]">
 
@@ -86,7 +86,7 @@ export default function Hero() {
                     </span>
 
                     {/* La línea decorativa debajo */}
-<span className="absolute md:bottom-4 bottom-2 -z-10 left-0 w-full md:h-[12px] h-[8px] bg-pedal-primary" />
+                    <span className="absolute md:bottom-4 bottom-2 -z-10 left-0 w-full md:h-[12px] h-[8px] bg-pedal-primary" />
 
                   </span>
                 </div>
