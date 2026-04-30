@@ -11,9 +11,15 @@ module.exports = {
         // El nombre 'syne' debe coincidir con la clase font-syne de tu HTML
         syne: ['var(--font-syne)', 'sans-serif'],
       },
-      colors: {
-        'pedal-primary': '#tu-color-aqui', // Asegúrate de tener definido tu color primario
-      }
+      keyframes: {
+        marquee: {
+          '0%':   { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        'marquee-scroll': 'marquee 25s linear infinite',
+      },
     },
   },
   plugins: [],

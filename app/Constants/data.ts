@@ -1,3 +1,6 @@
-// export const Navbar_Options: NavItem[] = [
-//     {}
-// ];
+export const MARQUEE_PHRASES = [
+    "ENVIOS A TODA COLOMBIA",
+    "DISEÑOS AERODINAMICOS",
+    "PERFORMANCE AL MAXIMO",
+    "TECNOLOGIA DE CARBONO",
+];
