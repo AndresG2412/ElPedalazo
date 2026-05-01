@@ -4,7 +4,7 @@ import { CATEGORIAS } from "@/app/Constants/data";
 
 export default function Categorias() {
   return (
-    <section className="py-16 md:py-24 bg-pedal-bgMain" id="categorias">
+    <section className="py-32 md:py-24 md:py-24 bg-pedal-bgMain" id="categorias">
       <Container>
         <div className="mb-8 md:mb-12">
           <h2 className="text-3xl md:text-5xl font-syne font-black text-white mb-2">
@@ -71,7 +71,7 @@ export default function Categorias() {
         </div>
 
         {/* Desktop: bento grid original */}
-        <div className="hidden md:grid md:grid-cols-4 md:grid-rows-2 gap-6 auto-rows-[300px]">
+        <div className="hidden md:grid md:grid-cols-4 gap-6 auto-rows-[300px]">
           {CATEGORIAS.map((cat, idx) => (
             <div
               key={idx}
