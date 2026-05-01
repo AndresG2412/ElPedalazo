@@ -41,7 +41,7 @@ export default function Location() {
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-14">
         {/* ── Left: info ── */}
         <div className="flex-1 min-w-0">
-          <h2 className="text-5xl font-syne font-black text-[#e5e5e5] leading-[0.85] uppercase tracking-wide mb-4">
+          <h2 className="text-4xl md:text-5xl font-syne font-black text-[#e5e5e5] leading-[0.85] uppercase tracking-wide mb-4">
                 <span
                     className="block z-10"
                     style={{

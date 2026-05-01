@@ -6,7 +6,7 @@ import Container from './Container';
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-[120vh] overflow-hidden px-2 md:px-5" id='inicio'>
+    <section className="relative w-full h-[90vh] md:h-[120vh] overflow-hidden px-2 md:px-5" id='inicio'>
       {/* Imagen de fondo */}
       <Image
         src={bgImage}
@@ -28,7 +28,7 @@ export default function Hero() {
       />
 
       {/* Contenido */}
-      <div className="relative z-10 flex  items-center h-full md:pt-16 ">
+      <div className="relative z-10 flex items-center h-screen md:pt-16">
         <Container>
           <div className="max-w-[800px]">
 
@@ -65,13 +65,13 @@ export default function Hero() {
                     className="block ml-[4%] md:ml-[8%] relative w-fit px-8 py-2"
                     style={{
                       background: `
-      radial-gradient(
-        ellipse at center, 
-        rgba(255, 255, 255, 0.25) 0%, 
-        rgba(255, 255, 255, 0.1) 40%, 
-        transparent 80%
-      )
-    `,
+                      radial-gradient(
+                        ellipse at center, 
+                        rgba(255, 255, 255, 0.25) 0%, 
+                        rgba(255, 255, 255, 0.1) 40%, 
+                        transparent 80%
+                      )
+                    `,
                     }}
                   >
                     <span
