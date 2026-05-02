@@ -5,22 +5,16 @@ import Container from './Container';
 import Link from 'next/link';
 import { NAV_LINKS } from '../Constants/data';
 
-// Hook para scroll suave con offset del navbar fijo
 function useSmoothScroll() {
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        // Solo actuar en links internos tipo "#seccion"
         if (!href.startsWith('#')) return;
-
         e.preventDefault();
         const target = document.querySelector(href);
         if (!target) return;
-
-        const navbarHeight = 80; // ajusta si tu navbar mide diferente
+        const navbarHeight = 80;
         const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
         window.scrollTo({ top, behavior: 'smooth' });
     };
-
     return handleNavClick;
 }
 
@@ -42,7 +36,6 @@ export default function Navbar() {
         return () => { document.body.style.overflow = ''; };
     }, [isOpen]);
 
-    // Wrapper: cierra el sidebar Y hace scroll suave
     const handleMobileNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
         setIsOpen(false);
         handleNavClick(e, href);
@@ -57,8 +50,8 @@ export default function Navbar() {
 
                     <div className='font-bold text-2xl cursor-default'>El Pedalazo</div>
 
-                    {/* Links — solo desktop */}
-                    <div className='hidden md:flex text-sm gap-x-5 uppercase font-semibold tracking-wide'>
+                    {/* Links — solo desktop (≥1201px) */}
+                    <div className='hidden min-[1201px]:flex text-sm gap-x-5 uppercase font-semibold tracking-wide'>
                         {NAV_LINKS.map(({ label, href }) => (
                             <a
                                 key={label}
@@ -72,7 +65,8 @@ export default function Navbar() {
                     </div>
 
                     <div className='flex items-center gap-x-3'>
-                        <div className='hidden md:flex items-center gap-x-3'>
+                        {/* Iconos desktop */}
+                        <div className='hidden min-[1201px]:flex items-center gap-x-3'>
                             <button className='hover:scale-110 transition-transform cursor-pointer'>
                                 <Search />
                             </button>
@@ -84,15 +78,18 @@ export default function Navbar() {
                             </button>
                         </div>
 
+                        {/* Botón Search móvil */}
                         <button
                             onClick={() => setIsOpen(false)}
-                            className='block md:hidden hover:scale-110 transition-transform cursor-pointer'
+                            className='block min-[1201px]:hidden hover:scale-110 transition-transform cursor-pointer'
                             aria-label="Buscar"
                         >
                             <Search size={22} />
                         </button>
+
+                        {/* Botón hamburguesa */}
                         <button
-                            className='md:hidden hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'
+                            className='min-[1201px]:hidden hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'
                             onClick={() => setIsOpen(true)}
                             aria-label="Abrir menú"
                         >
@@ -102,15 +99,17 @@ export default function Navbar() {
                 </nav>
             </Container>
 
+            {/* Overlay */}
             <div
-                className={`md:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300
+                className={`min-[1201px]:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-sm transition-opacity duration-300
                     ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
                 onClick={() => setIsOpen(false)}
             />
 
+            {/* Sidebar: 75% en móvil, 50% desde sm hasta 1200px */}
             <div
                 ref={sidebarRef}
-                className={`md:hidden fixed inset-y-0 right-0 z-50 w-[75%] bg-pedal-bgMain border-l border-pedal-primary-glow/20
+                className={`min-[1201px]:hidden fixed inset-y-0 right-0 z-50 w-[75%] sm:w-[50%] bg-pedal-bgMain border-l border-pedal-primary-glow/20
                     flex flex-col p-8 gap-8 shadow-2xl
                     transition-transform duration-300 ease-in-out
                     ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
@@ -126,8 +125,7 @@ export default function Navbar() {
                     </button>
                 </div>
 
-                {/* Links móvil — scroll suave + cierra sidebar */}
-                <nav className='flex flex-col gap-y-5 uppercase font-semibold tracking-wide text-lg'>
+                <nav className='flex text-white flex-col gap-y-5 uppercase font-semibold tracking-wide text-lg'>
                     {NAV_LINKS.map(({ label, href }) => (
                         <a
                             key={label}

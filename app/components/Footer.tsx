@@ -6,7 +6,7 @@ import WhatsAppIcons from "@/app/images/whatsapp.svg"
 
 export default function Footer() {
     return (
-        <footer className="bg-pedal-bgCard">
+        <footer className="bg-pedal-bgCard text-white">
             <Container>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 items-start justify-center py-12">
 
@@ -106,7 +106,7 @@ export default function Footer() {
 
                 </div>
             </Container>
-            <div className="w-full h-20 border-t border-gray-400 text-center flex items-center justify-center">
+            <div className="w-full text-white h-20 border-t border-gray-400 text-center flex items-center justify-center">
                 <p>
                     © {new Date().getFullYear()} Club Pedalazo. Todos los derechos reservados.
                 </p>
