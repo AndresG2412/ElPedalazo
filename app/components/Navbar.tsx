@@ -4,6 +4,10 @@ import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import Container from './Container';
 import Link from 'next/link';
 import { NAV_LINKS } from '../Constants/data';
+import AuthModal from './AuthModal';
+import { auth } from '@/firebase/config';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+
 
 function useSmoothScroll() {
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -22,6 +26,16 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const sidebarRef = useRef<HTMLDivElement>(null);
     const handleNavClick = useSmoothScroll();
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [user, setUser] = useState<FirebaseUser | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
+
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -73,9 +87,13 @@ export default function Navbar() {
                             <Link href="/carrito" className='flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'>
                                 <ShoppingCart />
                             </Link>
-                            <button className='hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'>
+                            <button 
+                                onClick={() => setIsAuthModalOpen(true)}
+                                className='hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'
+                            >
                                 <User />
                             </button>
+
                         </div>
 
                         {/* Botón Search móvil */}
@@ -140,13 +158,17 @@ export default function Navbar() {
 
                 <div className='mt-auto mb-8 flex items-center gap-x-4 border-t border-pedal-primary-glow/20 pt-6'>
                     <button
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                            setIsOpen(false);
+                            setIsAuthModalOpen(true);
+                        }}
                         className='flex w-3/4 items-center justify-center gap-x-2 hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'
                         aria-label="Mi cuenta"
                     >
                         <User size={20} />
-                        <p>Iniciar Seccion</p>
+                        <p>{user ? "Mi Cuenta" : "Iniciar Sesión"}</p>
                     </button>
+
                     <Link
                         href="/carrito"
                         onClick={() => setIsOpen(false)}
@@ -157,7 +179,12 @@ export default function Navbar() {
                     </Link>
                 </div>
             </div>
+            <AuthModal 
+                isOpen={isAuthModalOpen} 
+                onClose={() => setIsAuthModalOpen(false)} 
+            />
             </header>
+
         </>
     );
 }
