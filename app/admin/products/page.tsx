@@ -13,6 +13,8 @@ import {
   DollarSign,
 } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { motion, AnimatePresence } from 'framer-motion';
+import EditProductModal from '@/app/components/EditProductModal';
 import { 
   getAllProducts, 
   updateProduct, 
@@ -51,6 +53,8 @@ export default function Inventario() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Cargar productos y categorías desde la base de datos
@@ -104,6 +108,11 @@ export default function Inventario() {
     return matchesSearch && matchesCategory;
   });
 
+  const handleEdit = (producto: Producto) => {
+    setSelectedProduct(producto);
+    setIsModalOpen(true);
+  };
+
   // Actualizar producto desde el modal
   const handleUpdateProduct = async (actualizado: Producto) => {
     try {
@@ -128,8 +137,10 @@ export default function Inventario() {
           background: '#0a0a0a',
           color: '#ffffff',
           confirmButtonColor: '#F59E0B',
-          timer: 2000
+          timer: 2000,
+          showConfirmButton: false
         });
+        setIsModalOpen(false);
       } else {
         throw new Error('No se pudo actualizar el producto');
       }
@@ -348,13 +359,13 @@ export default function Inventario() {
           </div>
         </div>
 
-        {/* Products Grid - Usando el componente ProductCard */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProductos.map((producto) => (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {filteredProductos.map((producto, index) => (
             <ProductCard
               key={producto.id}
               producto={producto}
-              onSave={handleUpdateProduct}
+              index={index}
+              onEdit={handleEdit}
               onDelete={handleDelete}
             />
           ))}
@@ -380,6 +391,16 @@ export default function Inventario() {
         )}
       </div>
     </div>
+
+    {/* Modal */}
+    {selectedProduct && (
+      <EditProductModal
+        isOpen={isModalOpen}
+        producto={selectedProduct}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleUpdateProduct}
+      />
+    )}
     </Container>
   );
 }

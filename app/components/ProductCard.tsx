@@ -1,8 +1,7 @@
 'use client';
 
-import { Package, Edit, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import EditProductModal from "@/app/components/EditProductModal"
+import { Package, Edit2, Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Producto {
   id: string;
@@ -18,85 +17,79 @@ interface Producto {
 
 interface ProductCardProps {
   producto: Producto;
+  index: number;
+  onEdit: (producto: Producto) => void;
   onDelete: (producto: Producto) => void;
-  onSave: (productoActualizado: Producto) => Promise<void>;
 }
 
-export default function ProductCard({ producto, onDelete, onSave }: ProductCardProps) {
-  const [editando, setEditando] = useState(false);
+export default function ProductCard({ producto, index, onEdit, onDelete }: ProductCardProps) {
   const hasImage = Boolean(producto.images?.[0]);
 
   return (
-    <>
-      <div className="bg-pedal-bgSurface rounded-xl border border-white/6 hover:border-pedal-primary-glow/35 transition-all duration-200 overflow-hidden flex flex-col group animate-in fade-in zoom-in">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="bg-pedal-bgSurface rounded-2xl border border-white/6 hover:border-pedal-primary-glow/35 transition-all duration-300 overflow-hidden flex flex-col group animate-in fade-in zoom-in cursor-pointer"
+    >
 
-        <div className="relative h-40 shrink-0 bg-white/4">
-          {hasImage ? (
-            <img
-              src={producto.images[0]}
-              alt={producto.title}
-              className="w-full h-full object-cover transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Package className="w-8 h-8 text-white/15" />
-            </div>
-          )}
-
-          <div className="absolute top-2 right-2 flex gap-4">
-            <button
-              onClick={() => setEditando(true)}
-              className="w-[35px] h-[35px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-white/70 backdrop-blur-sm"
-              title="Editar"
-            >
-              <Edit className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => onDelete(producto)}
-              className="w-[35px] h-[35px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-red-400 backdrop-blur-sm"
-              title="Eliminar"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
+      <div className="relative h-38 shrink-0 bg-white/4 overflow-hidden">
+        {hasImage ? (
+          <img
+            src={producto.images[0]}
+            alt={producto.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Package className="w-10 h-10 text-white/15" />
           </div>
+        )}
+
+        <div className="absolute top-3 right-3 flex gap-2" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={() => onEdit(producto)}
+            className="p-[12px] bg-black/60 border border-white/10 rounded-xl text-white/70 backdrop-blur-md hover:bg-pedal-primary-glow hover:text-black transition-all"
+            title="Editar"
+          >
+            <Edit2 className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => onDelete(producto)}
+            className="p-[12px] bg-black/60 border border-white/10 rounded-xl text-red-400 backdrop-blur-md hover:bg-red-500 hover:text-white transition-all"
+            title="Eliminar"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
         </div>
+      </div>
 
-        {/* Cuerpo */}
-        <div className="flex flex-col gap-1.5 px-3.5 pt-3 pb-3.5 flex-1">
-          <span className="text-pedal-primary-glow text-[10px] font-semibold tracking-widest uppercase opacity-80">
-            {producto.category}
+      {/* Cuerpo */}
+      <div className="flex flex-col gap-2 px-2 pt-4 pb-2 flex-1">
+        <span className="text-pedal-primary-glow text-[11px] font-bold tracking-widest uppercase opacity-80">
+          {producto.category}
+        </span>
+
+        <h3 className="font-syne font-bold text-2xl text-white leading-tight group-hover:text-pedal-primary-glow transition-colors truncate">
+          {producto.title}
+        </h3>
+
+        <p className="text-white/45 text-sm leading-relaxed line-clamp-2 shrink-0">
+          {producto.description}
+        </p>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-auto pt- border-t border-white/6">
+          <span className="text-pedal-primary-glow font-extrabold text-2xl tracking-tight">
+            ${producto.price.toLocaleString()}
           </span>
-
-          <h3 className="font-syne font-bold text-xl text-white leading-snug truncate">
-            {producto.title}
-          </h3>
-
-          <p className="text-white/45 text-xs leading-relaxed line-clamp-2 shrink-0">
-            {producto.description}
-          </p>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between mt-auto pt-2.5 border-t border-white/6">
-            <span className="text-pedal-primary-glow font-extrabold text-[17px] tracking-tight">
-              ${producto.price}
-            </span>
-            <span className="text-white/40 text-[11px] bg-white/5 rounded-[5px] px-2 py-0.5">
+          <div className="flex flex-col items-end">
+            <span className="text-white/40 text-[11px] bg-white/5 rounded-lg px-2.5 py-1 border border-white/5">
               Stock: {producto.stock ?? 0}
             </span>
           </div>
         </div>
       </div>
-
-      {editando && (
-        <EditProductModal
-          producto={producto}
-          onClose={() => setEditando(false)}
-          onSave={async (actualizado) => {
-            await onSave(actualizado);
-            setEditando(false);
-          }}
-        />
-      )}
-    </>
+    </motion.div>
   );
 }

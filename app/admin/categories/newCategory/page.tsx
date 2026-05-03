@@ -124,7 +124,7 @@ export default function NewCategory() {
         {/* Formulario Principal */}
         <form onSubmit={handleSubmit} className="animate-fade-up animation-delay-200">
           {/* Tarjeta del Formulario */}
-          <div className="bg-pedal-bgSurface/50 backdrop-blur-sm rounded-[2rem] border border-pedal-primary-glow/10 p-6 md:p-8 shadow-2xl">
+          <div className="bg-pedal-bgSurface/50 backdrop-blur-sm rounded-4xl border border-pedal-primary-glow/10 p-6 md:p-8 shadow-2xl">
             {/* Campo: Nombre de la Categoría */}
             <div className="mb-8">
               <label className="block text-white/70 font-syne text-sm font-semibold mb-3">
@@ -165,16 +165,13 @@ export default function NewCategory() {
                   transition-all duration-300 resize-none"
                 required
               />
-              <p className="text-white/40 text-sm mt-2 ml-1">
-                Una buena descripción ayuda a los clientes a encontrar productos fácilmente
-              </p>
             </div>
 
             {/* Botones de Acción */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-4 pt-4 w-full">
               <Link
                 href='/admin/categories'
-                className="flex-1 px-6 py-3 rounded-xl bg-white/5 border border-white/10 
+                className="w-1/3 px-6 py-3 rounded-xl bg-white/5 border border-white/10 
                   text-white/70 font-syne font-semibold transition-all duration-300 
                   hover:scale-[1.02] hover:bg-white/10 hover:border-white/20
                   flex items-center justify-center gap-2"
@@ -184,7 +181,7 @@ export default function NewCategory() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 px-8 py-3 rounded-xl bg-gradient-to-r from-pedal-primary-glow to-amber-600
+                className="w-2/3 px-4 md:px-8 py-3 rounded-xl bg-linear-to-r from-pedal-primary-glow to-amber-600
                   text-black font-syne font-bold transition-all duration-300 
                   hover:scale-[1.02] hover:shadow-lg hover:shadow-pedal-primary-glow/25
                   active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed
