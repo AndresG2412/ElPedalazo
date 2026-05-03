@@ -4,7 +4,7 @@ import { CATEGORIAS } from "@/app/Constants/data";
 
 export default function Categorias() {
   return (
-    <section className="py-32 md:py-24 md:py-24 bg-pedal-bgMain" id="categorias">
+    <section className="py-32 md:py-24 bg-pedal-bgMain" id="categorias">
       <Container>
         <div className="mb-8 md:mb-12">
           <h2 className="text-3xl md:text-5xl font-syne font-black text-white mb-2">
@@ -21,7 +21,7 @@ export default function Categorias() {
             {CATEGORIAS.map((cat, idx) => (
               <div
                 key={idx}
-                className="group relative flex-none w-[200px] h-[240px] overflow-hidden rounded-2xl bg-[#111111] border border-white/5 cursor-pointer snap-start"
+                className="group relative flex-none w-[200px] h-[240px] overflow-hidden rounded-2xl bg-pedal-bgSurface border border-white/5 cursor-pointer snap-start"
               >
                 {/* Imagen de fondo */}
                 <div className="absolute inset-0">
@@ -36,13 +36,13 @@ export default function Categorias() {
                 </div>
 
                 {/* Gradiente */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent opacity-90 pointer-events-none" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent opacity-90 pointer-events-none" />
 
                 {/* Icono */}
                 <div className="absolute top-4 right-4">
                   <cat.icon
                     strokeWidth={1.5}
-                    className="w-6 h-6 text-[#A8A29E]"
+                    className="w-6 h-6 text-pedal-accent"
                   />
                 </div>
 
@@ -51,7 +51,7 @@ export default function Categorias() {
                   <h3 className="text-base font-syne font-bold text-white mb-1 leading-tight">
                     {cat.title}
                   </h3>
-                  <p className="text-xs font-sans text-[#C4BDB5] leading-snug line-clamp-2">
+                  <p className="text-xs font-sans text-pedal-textMuted leading-snug line-clamp-2">
                     {cat.description}
                   </p>
                 </div>
@@ -75,7 +75,7 @@ export default function Categorias() {
           {CATEGORIAS.map((cat, idx) => (
             <div
               key={idx}
-              className={`group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5 cursor-pointer ${cat.className}`}
+              className={`group relative overflow-hidden rounded-3xl bg-pedal-bgSurface border border-white/5 cursor-pointer ${cat.className}`}
             >
               <div className="absolute inset-0">
                 <Image
@@ -88,12 +88,12 @@ export default function Categorias() {
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent opacity-90 pointer-events-none transition-opacity duration-500 group-hover:opacity-70" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent opacity-90 pointer-events-none transition-opacity duration-500 group-hover:opacity-70" />
 
               <div className="absolute top-6 right-6">
                 <cat.icon
                   strokeWidth={1.5}
-                  className="w-8 h-8 text-[#A8A29E] transition-all duration-500 group-hover:text-pedal-primary-glow group-hover:scale-110"
+                  className="w-8 h-8 text-pedal-accent transition-all duration-500 group-hover:text-pedal-primary-glow group-hover:scale-110"
                 />
               </div>
 
@@ -101,7 +101,7 @@ export default function Categorias() {
                 <h3 className="text-2xl md:text-3xl font-syne font-bold text-white mb-2 transition-colors duration-500 group-hover:text-pedal-primary-glow">
                   {cat.title}
                 </h3>
-                <p className="text-sm font-sans text-[#C4BDB5] transition-colors duration-500 group-hover:text-white">
+                <p className="text-sm font-sans text-pedal-textMuted transition-colors duration-500 group-hover:text-white">
                   {cat.description}
                 </p>
               </div>

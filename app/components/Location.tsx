@@ -37,7 +37,7 @@ export default function Location() {
   const isOpen = useBusinessStatus();
 
   return (
-    <section className="bg-[#1c1a17] bg-gradient-to-l from-[#050505] to-[#1C1105] text-white py-28 px-6" id="contacto">
+    <section className="bg-[#1c1a17] bg-linear-to-l from-[#050505] to-[#1C1105] text-white py-28 px-6" id="contacto">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-14">
         {/* ── Left: info ── */}
         <div className="flex-1 min-w-0">

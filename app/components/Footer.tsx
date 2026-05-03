@@ -28,8 +28,8 @@ export default function Footer() {
                     {/* ── Sección 2: Contacto ── */}
                     <div className="flex flex-col items-center p-4">
                         <div className="flex items-center w-full gap-4">
-                            <div className="flex-grow h-px bg-gray-300" />
-                            <div className="flex-shrink-0">
+                            <div className="grow h-px bg-gray-300" />
+                            <div className="shrink-0">
                                 <p
                                     className="text-center text-3xl tracking-wider"
                                     style={{
@@ -40,7 +40,7 @@ export default function Footer() {
                                     CONTACTO
                                 </p>
                             </div>
-                            <div className="flex-grow h-px bg-gray-300" />
+                            <div className="grow h-px bg-gray-300" />
                         </div>
                         <ol className="flex flex-col gap-y-4 mt-6 w-full">
                             {FOOTER_CONTACTO.map((item, index) => (
@@ -58,8 +58,8 @@ export default function Footer() {
                     {/* ── Sección 3: Redes sociales ── */}
                     <div className="flex flex-col items-center p-4">
                         <div className="flex items-center w-full gap-4">
-                            <div className="flex-grow h-px bg-gray-300" />
-                            <div className="flex-shrink-0">
+                            <div className="grow h-px bg-gray-300" />
+                            <div className="shrink-0">
                                 <p
                                     className="text-center text-3xl tracking-wider"
                                     style={{
@@ -70,7 +70,7 @@ export default function Footer() {
                                     SÍGUENOS
                                 </p>
                             </div>
-                            <div className="flex-grow h-px bg-gray-300" />
+                            <div className="grow h-px bg-gray-300" />
                         </div>
 
                         <ul className="flex flex-row gap-x-6 mt-6 justify-center">

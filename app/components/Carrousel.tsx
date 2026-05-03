@@ -23,8 +23,8 @@ export default function Carrousel() {
             </div>
             
             {/* Overlay de gradiente para suavizar bordes (opcional pero premium) */}
-            <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-pedal-primary to-transparent z-10" />
-            <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-pedal-primary to-transparent z-10" />
+            <div className="absolute inset-y-0 left-0 w-20 bg-linear-to-r from-pedal-primary to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-20 bg-linear-to-l from-pedal-primary to-transparent z-10" />
         </div>
     );
 }

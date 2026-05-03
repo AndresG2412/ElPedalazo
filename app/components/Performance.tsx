@@ -59,7 +59,7 @@ export default function Performance() {
                 <div className="flex flex-col gap-4">
                 {/* Feature 1 */}
                 <div className="flex items-start gap-5">
-                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
                     <Settings size={26} strokeWidth={1.5} />
                     </div>
                     <div>
@@ -70,7 +70,7 @@ export default function Performance() {
 
                 {/* Feature 2 */}
                 <div className="flex items-start gap-5">
-                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
                     <Activity size={26} strokeWidth={1.5} />
                     </div>
                     <div>
@@ -81,7 +81,7 @@ export default function Performance() {
 
                 {/* Feature 3 */}
                 <div className="flex items-start gap-5">
-                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                    <div className="p-3.5 rounded-2xl bg-[#111] border border-[#f59e0b]/20 text-[#f59e0b] shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
                     <UserCog size={26} strokeWidth={1.5} />
                     </div>
                     <div>
@@ -93,7 +93,7 @@ export default function Performance() {
             </div>
 
             {/* Columna Derecha - Formulario */}
-            <div className="bg-[#0a0a0a] p-8 rounded-[2rem] border border-[#27272a]/60 shadow-2xl relative overflow-hidden">
+            <div className="bg-[#0a0a0a] p-8 rounded-4xl border border-[#27272a]/60 shadow-2xl relative overflow-hidden">
                 <h3 className="text-3xl font-syne font-bold text-white mb-2">Agendar Intervención</h3>
                 <p className="text-[#a1a1aa] text-sm font-sans mb-5">Reserva tu espacio en el taller especializado.</p>
 
