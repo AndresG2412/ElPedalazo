@@ -46,17 +46,17 @@ export default function ProductCard({ producto, onDelete, onSave }: ProductCardP
           <div className="absolute top-2 right-2 flex gap-4">
             <button
               onClick={() => setEditando(true)}
-              className="w-[30px] h-[30px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-white/70 backdrop-blur-sm"
+              className="w-[35px] h-[35px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-white/70 backdrop-blur-sm"
               title="Editar"
             >
-              <Edit className="w-3.5 h-3.5" />
+              <Edit className="w-5 h-5" />
             </button>
             <button
               onClick={() => onDelete(producto)}
-              className="w-[30px] h-[30px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-red-400 backdrop-blur-sm"
+              className="w-[35px] h-[35px] flex items-center justify-center rounded-[7px] hover:scale-105 transition-transform duration-200 bg-black border-[1.5px] text-red-400 backdrop-blur-sm"
               title="Eliminar"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-5 h-5" />
             </button>
           </div>
         </div>

@@ -11,7 +11,6 @@ import {
   ArrowLeft,
   Tag,
   DollarSign,
-
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { 
@@ -214,7 +213,7 @@ export default function Inventario() {
     <div className="min-h-screen bg-pedal-bgMain pt-24 pb-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto animate-fade-up">
         {/* Header */}
-        <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="mb-10 flex flex-row justify-between items-center md:items-center gap-4">
           <div>
             <h1 className="font-syne font-bold text-4xl md:text-5xl text-white tracking-tight">
               Inventario
@@ -350,7 +349,7 @@ export default function Inventario() {
         </div>
 
         {/* Products Grid - Usando el componente ProductCard */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredProductos.map((producto) => (
             <ProductCard
               key={producto.id}

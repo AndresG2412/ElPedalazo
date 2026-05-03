@@ -309,7 +309,7 @@ export default function NewProduct() {
         </div>
 
         {/* Formulario Principal */}
-        <form onSubmit={handleSubmit} className="animate-fade-up animation-delay-200 bg-pedal-bgSurface/50 backdrop-blur-sm rounded-[2rem] border border-pedal-primary-glow/10 p-6 md:p-8 shadow-2xl">
+        <form onSubmit={handleSubmit} className="animate-fade-up animation-delay-200 bg-pedal-bgSurface/50 backdrop-blur-sm rounded-4xl border border-pedal-primary-glow/10 p-6 md:p-8 shadow-2xl">
           <div className="grid md:grid-cols-2 gap-8 ">
             {/* Sección de Imagenes */}
             <div className="space-y-4 ">
@@ -324,7 +324,7 @@ export default function NewProduct() {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 className={`
-                  relative rounded-[2rem] bg-pedal-bgSurface border-2 border-dashed
+                  relative rounded-4xl bg-pedal-bgSurface border-2 border-dashed
                   transition-all duration-300 cursor-pointer
                   ${uploadingImages ? 'opacity-70 cursor-wait' : ''}
                   ${isDragging 
@@ -558,7 +558,7 @@ export default function NewProduct() {
           )}
 
           {/* Botones de Acción */}
-          <div className="mt-10 flex gap-4 justify-end">
+          <div className="mt-10 flex gap-4 justify-center items-center">
             <Link
             href={"/admin/products"}
               className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white/70
@@ -570,7 +570,7 @@ export default function NewProduct() {
             <button
               type="submit"
               disabled={isPublishDisabled()}
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-pedal-primary-glow to-amber-600
+              className="px-4 md:px-8 py-3 rounded-xl bg-linear-to-r from-pedal-primary-glow to-amber-600
                 text-black font-syne font-bold transition-all hover:scale-[1.02] 
                 shadow-lg hover:shadow-pedal-primary-glow/25 flex items-center gap-2
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
@@ -588,7 +588,7 @@ export default function NewProduct() {
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  Publicar Producto
+                  Subir Producto
                 </>
               )}
             </button>

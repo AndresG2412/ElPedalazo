@@ -386,7 +386,7 @@ export default function EditProductModal({ producto, onClose, onSave }: EditProd
             <button
               onClick={handleSubmit}
               disabled={saving}
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-pedal-primary-glow to-amber-600
+              className="px-8 py-3 rounded-xl bg-linear-to-r from-pedal-primary-glow to-amber-600
                 text-black font-syne font-bold transition-all hover:scale-[1.02] 
                 shadow-lg hover:shadow-pedal-primary-glow/25 flex items-center gap-2
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
