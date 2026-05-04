@@ -26,7 +26,7 @@ export const FOOTER_REDES = [
 export const NAV_LINKS = [
     { label: 'Inicio', href: '/#inicio' },
     { label: 'Categorias', href: '/#categorias' },
-    { label: 'Productos', href: '/#productos' },
+    { label: 'Productos', href: '/productos' },
     { label: 'Para tu Carro!', href: '/#carro' },
     { label: 'Servicios', href: '/#servicios' },
     { label: 'Contacto', href: '/#contacto' },
@@ -76,3 +76,5 @@ import imgAccesorios from "@/app/images/scott-accessories.png"
 import imgBikeE from "@/app/images/scott-ebike.png"
 import imgScott from "@/app/images/scott-gravel.png"
 import { Mountain, Wind, Map, Shield, Zap } from "lucide-react";
+
+
