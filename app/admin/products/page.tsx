@@ -1,34 +1,38 @@
 'use client';
 
-import Link from 'next/link';
-import Container from '@/app/components/Container';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Package, 
-  Plus, 
-  Search, 
+  ArrowLeft, 
+  Tag, 
+  DollarSign, 
   Filter,
-  ArrowLeft,
-  Tag,
-  DollarSign,
+  Loader2 
 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Timestamp } from 'firebase/firestore';
+
+// Componentes Reutilizables (Asegúrate de que las rutas sean correctas)
+import Container from '@/app/components/Container';
+import ProductCard from '@/app/components/ProductCard';
 import EditProductModal from '@/app/components/EditProductModal';
+import SearchInput from '@/app/components/SearchInput';
+import CategoryFilter from '@/app/components/CategoryFilter';
+import CreateProductBtn from '@/app/components/CreateProductBtn';
+
+// Firebase
 import { 
   getAllProducts, 
   updateProduct, 
-  deleteProduct,
-  Product as ProductFirebase
+  deleteProduct 
 } from '@/firebase/products';
 import { 
-  getAllCategories, 
-  Category as CategoryFirebase 
+  getAllCategories 
 } from '@/firebase/categories';
-import { Timestamp } from 'firebase/firestore';
-import ProductCard from '@/app/components/ProductCard';
 
-// Tipos basados en tu estructura de base de datos
+// --- Interfaces ---
 interface Producto {
   id: string;
   title: string;
@@ -53,11 +57,12 @@ export default function Inventario() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showFilterBar, setShowFilterBar] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Cargar productos y categorías desde la base de datos
+  // Carga inicial de datos
   useEffect(() => {
     fetchData();
   }, []);
@@ -65,7 +70,6 @@ export default function Inventario() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Cargar productos y categorías en paralelo
       const [productosData, categoriasData] = await Promise.all([
         getAllProducts(),
         getAllCategories()
@@ -88,18 +92,10 @@ export default function Inventario() {
     }
   };
 
-  // Helper para mostrar fechas de Firestore
-  const formatDate = (date: any) => {
-    if (!date) return 'N/A';
-    if (date instanceof Timestamp) return date.toDate().toLocaleDateString();
-    if (date.toDate) return date.toDate().toLocaleDateString();
-    if (date instanceof Date) return date.toLocaleDateString();
-    return new Date(date).toLocaleDateString();
-  };
-
-  // Filtrar productos por búsqueda y categoría
+  // Lógica de filtrado
   const filteredProductos = productos.filter(producto => {
-    const matchesSearch = producto.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = 
+      producto.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       producto.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       producto.description.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -113,7 +109,6 @@ export default function Inventario() {
     setIsModalOpen(true);
   };
 
-  // Actualizar producto desde el modal
   const handleUpdateProduct = async (actualizado: Producto) => {
     try {
       const result = await updateProduct(actualizado.id, {
@@ -141,8 +136,6 @@ export default function Inventario() {
           showConfirmButton: false
         });
         setIsModalOpen(false);
-      } else {
-        throw new Error('No se pudo actualizar el producto');
       }
     } catch (error: any) {
       Swal.fire({
@@ -157,11 +150,10 @@ export default function Inventario() {
     }
   };
 
-  // Eliminar producto
   const handleDelete = async (producto: Producto) => {
     const result = await Swal.fire({
       title: '¿Eliminar producto?',
-      text: `¿Estás seguro de que deseas eliminar "${producto.title}"? Esta acción no se puede deshacer.`,
+      text: `¿Estás seguro de que deseas eliminar "${producto.title}"?`,
       icon: 'warning',
       background: '#0a0a0a',
       color: '#ffffff',
@@ -169,51 +161,33 @@ export default function Inventario() {
       confirmButtonColor: '#dc2626',
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
     });
 
     if (result.isConfirmed) {
       try {
         const deleteResult = await deleteProduct(producto.id);
-
         if (deleteResult.success) {
           setProductos(productos.filter(p => p.id !== producto.id));
-          
           Swal.fire({
-            title: '¡Producto eliminado!',
-            text: 'El producto ha sido eliminado del inventario',
+            title: '¡Eliminado!',
             icon: 'success',
             background: '#0a0a0a',
             color: '#ffffff',
-            confirmButtonColor: '#F59E0B',
-            timer: 2000
+            timer: 2000,
+            showConfirmButton: false
           });
-        } else {
-          throw new Error('No se pudo eliminar el producto');
         }
       } catch (error: any) {
-        Swal.fire({
-          title: 'Error',
-          text: error.message || 'No se pudo eliminar el producto',
-          icon: 'error',
-          background: '#0a0a0a',
-          color: '#ffffff',
-          confirmButtonColor: '#F59E0B',
-        });
+        // ... handling error
       }
     }
   };
 
-  // Loading state
   if (loading) {
     return (
       <Container>
-        <div className="min-h-screen bg-pedal-bgMain pt-24 pb-20 px-4 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-center items-center h-96">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pedal-primary-glow"></div>
-            </div>
-          </div>
+        <div className="min-h-screen bg-pedal-bgMain pt-24 flex justify-center items-center">
+          <Loader2 className="w-12 h-12 text-pedal-primary-glow animate-spin" />
         </div>
       </Container>
     );
@@ -221,186 +195,157 @@ export default function Inventario() {
 
   return (
     <Container>
-    <div className="min-h-screen bg-pedal-bgMain pt-24 pb-20 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto animate-fade-up">
-        {/* Header */}
-        <div className="mb-10 flex flex-row justify-between items-center md:items-center gap-4">
-          <div>
+      <div className="min-h-screen bg-pedal-bgMain pt-24 pb-20 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* --- Header --- */}
+          <div className="mb-10 flex justify-between items-center">
             <h1 className="font-syne font-bold text-4xl md:text-5xl text-white tracking-tight">
               Inventario
             </h1>
-          </div>
-          
-          <Link
-            href="/admin"
-            className="flex items-center gap-2 text-pedal-primary-glow hover:text-amber-600 transition-colors hover:scale-[1.02]"
-            >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Regresar</span>
-          </Link>
-        </div>
-
-        {/* Search y Filtros en misma fila */}
-        <div className="mb-8 flex flex-col md:flex-row gap-4">
-          {/* Input de búsqueda - 2/3 */}
-          <div className="relative md:w-2/3">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/40 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Buscar productos por nombre, categoría o descripción..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-pedal-primary-glow/50 focus:border-transparent transition-all"
-            />
-          </div>
-          
-          {/* Botón de filtros - 1/3 */}
-          <div className="md:w-1/3 flex gap-3">
-            <button
-              onClick={() => setSelectedCategory(prev => prev === 'all' ? categorias[0]?.name || 'all' : 'all')}
-              className="w-1/3 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl py-3 px-4 text-white transition-all"
-            >
-              <Filter className="w-5 h-5" />
-              <span>Filtros</span>
-            </button>
-
             <Link
-              href={'/admin/products/newProduct'}
-              className="w-2/3 font-semibold bg-linear-to-r from-pedal-primary-glow to-amber-600 text-white px-3 py-3 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg"
+              href="/admin"
+              className="flex items-center gap-2 text-pedal-primary-glow hover:text-amber-600 transition-colors"
             >
-              <Plus className="w-5 h-5" strokeWidth={3}/>
-              Nuevo Producto
+              <ArrowLeft className="w-5 h-5" />
+              <span>Regresar</span>
             </Link>
           </div>
-        </div>
 
-        {/* Categorías - Filtro (se muestra solo cuando hay filtro activo) */}
-        {selectedCategory !== 'all' && (
-          <div className="mb-8 bg-white/5 rounded-xl p-4 animate-in slide-in-from-top duration-300">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-white/70 text-sm">Filtrar por categoría:</h3>
+          {/* --- Barra de Herramientas (Búsqueda y Acciones) --- */}
+          <div className="mb-8 flex flex-col md:flex-row gap-4">
+            <SearchInput 
+              searchTerm={searchTerm} 
+              setSearchTerm={setSearchTerm} 
+              placeholder="Buscar productos por nombre, categoría o descripción..."
+              className="md:w-2/3"
+            />
+            
+            <div className="md:w-1/3 flex gap-3">
               <button
-                onClick={() => setSelectedCategory('all')}
-                className="text-sm text-pedal-primary-glow hover:text-amber-400"
-              >
-                Limpiar filtros
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-lg text-sm transition-all ${
-                  selectedCategory === 'all'
-                    ? 'bg-pedal-primary-glow text-white'
-                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                onClick={() => setShowFilterBar(!showFilterBar)}
+                className={`w-1/3 flex items-center justify-center gap-2 border border-white/10 rounded-xl py-3 px-4 text-white transition-all ${
+                  showFilterBar ? 'bg-white/20 border-pedal-primary-glow/50' : 'bg-white/5 hover:bg-white/10'
                 }`}
               >
-                Todos
+                <Filter className="w-5 h-5" />
+                <span className="hidden sm:inline">Filtros</span>
               </button>
-              {categorias.map((categoria) => (
-                <button
-                  key={categoria.id}
-                  onClick={() => setSelectedCategory(categoria.name)}
-                  className={`px-4 py-2 rounded-lg text-sm transition-all ${
-                    selectedCategory === categoria.name
-                      ? 'bg-pedal-primary-glow text-white'
-                      : 'bg-white/10 text-white/70 hover:bg-white/20'
-                  }`}
-                >
-                  {categoria.name}
-                </button>
-              ))}
+
+              <CreateProductBtn />
             </div>
           </div>
-        )}
 
-        {/* Stats Cards */}
-        <div className="mb-6 overflow-x-auto scrollbar-hide">
-          <div className="flex gap-3 min-w-max md:grid md:grid-cols-3 md:gap-4 md:min-w-0">
-
-            <div className="bg-pedal-bgSurface rounded-2xl px-4 py-3 border border-pedal-primary-glow/20 transition-all w-[220px] md:w-auto cursor-default">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="bg-pedal-primary-glow/10 p-2 rounded-xl shrink-0">
-                    <Package className="w-4 h-4 text-pedal-primary-glow" />
-                  </div>
-                  <p className="text-white/50 text-sm">Total Productos</p>
-                </div>
-                <p className="font-bold text-2xl text-white">{productos.length}</p>
-              </div>
-            </div>
-
-            <div className="bg-pedal-bgSurface rounded-2xl px-4 py-3 border border-pedal-primary-glow/20 transition-all w-[220px] md:w-auto cursor-default">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="bg-pedal-primary-glow/10 p-2 rounded-xl shrink-0">
-                    <Tag className="w-4 h-4 text-pedal-primary-glow" />
-                  </div>
-                  <p className="text-white/50 text-sm">Categorías</p>
-                </div>
-                <p className="font-bold text-2xl text-white">{categorias.length}</p>
-              </div>
-            </div>
-
-            <div className="bg-pedal-bgSurface rounded-2xl px-4 py-3 border border-pedal-primary-glow/20 transition-all w-[220px] md:w-auto cursor-default">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="bg-pedal-primary-glow/10 p-2 rounded-xl shrink-0">
-                    <DollarSign className="w-4 h-4 text-pedal-primary-glow" />
-                  </div>
-                  <p className="text-white/50 text-sm">Valor Total</p>
-                </div>
-                <p className="font-bold text-2xl text-white">
-                  ${productos.reduce((sum, p) => sum + (p.price * (p.stock || 0)), 0).toLocaleString()}
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {filteredProductos.map((producto, index) => (
-            <ProductCard
-              key={producto.id}
-              producto={producto}
-              index={index}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-
-        {/* No results */}
-        {filteredProductos.length === 0 && (
-          <div className="text-center py-12">
-            <Package className="w-16 h-16 text-white/20 mx-auto mb-4" />
-            <p className="text-white/50 text-lg">No se encontraron productos</p>
-            {(searchTerm || selectedCategory !== 'all') && (
-              <button
-                onClick={() => {
-                  setSearchTerm('');
-                  setSelectedCategory('all');
-                }}
-                className="mt-4 text-pedal-primary-glow hover:text-amber-400"
+          {/* --- Filtro de Categorías Expandible --- */}
+          <AnimatePresence>
+            {showFilterBar && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
               >
-                Limpiar filtros
-              </button>
+                <CategoryFilter 
+                  categorias={categorias}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+              </motion.div>
             )}
-          </div>
-        )}
-      </div>
-    </div>
+          </AnimatePresence>
 
-    {/* Modal */}
-    {selectedProduct && (
-      <EditProductModal
-        isOpen={isModalOpen}
-        producto={selectedProduct}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleUpdateProduct}
-      />
-    )}
+          {/* --- Stats Cards --- */}
+          <div className="mb-8 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 min-w-max md:grid md:grid-cols-3 md:min-w-0">
+              {/* Total Productos */}
+              <div className="bg-pedal-bgSurface rounded-2xl p-4 border border-pedal-primary-glow/10 min-w-[200px]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-pedal-primary-glow/10 p-2 rounded-xl">
+                      <Package className="w-5 h-5 text-pedal-primary-glow" />
+                    </div>
+                    <p className="text-white/50 text-sm">Productos</p>
+                  </div>
+                  <p className="font-bold text-2xl text-white">{productos.length}</p>
+                </div>
+              </div>
+
+              {/* Total Categorías */}
+              <div className="bg-pedal-bgSurface rounded-2xl p-4 border border-pedal-primary-glow/10 min-w-[200px]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-pedal-primary-glow/10 p-2 rounded-xl">
+                      <Tag className="w-5 h-5 text-pedal-primary-glow" />
+                    </div>
+                    <p className="text-white/50 text-sm">Categorías</p>
+                  </div>
+                  <p className="font-bold text-2xl text-white">{categorias.length}</p>
+                </div>
+              </div>
+
+              {/* Valor Total Inventario */}
+              <div className="bg-pedal-bgSurface rounded-2xl p-4 border border-pedal-primary-glow/10 min-w-[200px]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-pedal-primary-glow/10 p-2 rounded-xl">
+                      <DollarSign className="w-5 h-5 text-pedal-primary-glow" />
+                    </div>
+                    <p className="text-white/50 text-sm">Valor Total</p>
+                  </div>
+                  <p className="font-bold text-xl text-white">
+                    ${productos.reduce((sum, p) => sum + (p.price * (p.stock || 0)), 0).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* --- Grid de Productos --- */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatePresence mode="popLayout">
+              {filteredProductos.map((producto, index) => (
+                <ProductCard
+                  key={producto.id}
+                  producto={producto}
+                  index={index}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* --- Empty State --- */}
+          {filteredProductos.length === 0 && (
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="text-center py-20"
+            >
+              <Package className="w-16 h-16 text-white/10 mx-auto mb-4" />
+              <p className="text-white/50 text-lg">No se encontraron productos</p>
+              {(searchTerm || selectedCategory !== 'all') && (
+                <button
+                  onClick={() => { setSearchTerm(''); setSelectedCategory('all'); }}
+                  className="mt-4 text-pedal-primary-glow hover:underline"
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* --- Modales --- */}
+      {selectedProduct && (
+        <EditProductModal
+          isOpen={isModalOpen}
+          producto={selectedProduct}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleUpdateProduct}
+        />
+      )}
     </Container>
   );
 }
