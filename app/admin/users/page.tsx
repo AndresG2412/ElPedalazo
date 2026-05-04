@@ -148,10 +148,19 @@ export default function UsersPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col items-start">
             <h1 className="text-3xl md:text-4xl font-syne font-bold text-pedal-textHeading mb-2">
-              Admins
+              Administradores
             </h1>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center justify-center gap-2 bg-pedal-primary hover:bg-pedal-primary-glow text-pedal-primary-text px-6 py-3 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-pedal-primary/20"
+            >
+              <UserPlus size={20} />
+              Añadir Administrador
+            </button>
+          </div>
+          <div className="flex flex-col gap-y-4 items-end justify-end">
             <Link
               href="/admin"
               className="flex items-center gap-2 text-pedal-primary-glow hover:text-amber-600 transition-colors hover:scale-[1.02]"
@@ -160,13 +169,6 @@ export default function UsersPage() {
               <span>Regresar</span>
             </Link>
           </div>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center justify-center gap-2 bg-pedal-primary hover:bg-pedal-primary-glow text-pedal-primary-text px-6 py-3 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-pedal-primary/20"
-          >
-            <UserPlus size={20} />
-            Añadir Administrador
-          </button>
         </div>
 
         {/* Content */}
@@ -218,7 +220,7 @@ export default function UsersPage() {
                       {admin.name}
                     </h3>
                     <div className="flex items-center gap-2 text-pedal-textMuted text-sm mb-4">
-                      <Mail size={14} className="flex-shrink-0" />
+                      <Mail size={14} className="shrink-0" />
                       <span className="truncate">{admin.email}</span>
                     </div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-pedal-primary/20 text-pedal-primary text-xs font-bold rounded-full border border-pedal-primary/20">
