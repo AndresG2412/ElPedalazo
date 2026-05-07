@@ -132,7 +132,7 @@ export default function Hero() {
                 { num: '02', label: 'SOPORTE\nEXPERTO' },
                 { num: '03', label: 'AJUSTE\nPREMIUM' },
               ].map(({ num, label }) => (
-                <div key={num} className="tracking-widest">
+                <div key={num} className="tracking-widest text-white">
                   <div className="w-6 h-[3px] bg-pedal-primary mb-1" />
                   <span className='text-4xl md:text-5xl font-black font-syne'>{num}</span>
                   <p className='pt-1 md:pt-2 text-xs md:text-sm font-light whitespace-pre-line leading-snug'>

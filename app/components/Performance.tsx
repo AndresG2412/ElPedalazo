@@ -31,7 +31,7 @@ export default function Performance() {
   };
 
   return (
-    <section className="py-24 bg-[#050505]" id="servicios">
+    <section className="py-24 bg-[#050505] border-t border-pedal-primary/30" id="servicios">
       <Container>
         <div className='max-w-5xl mx-auto'>
             <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center gap-4">

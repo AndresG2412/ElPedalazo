@@ -9,7 +9,8 @@ import {
   Tag, 
   DollarSign, 
   Filter,
-  Loader2 
+  Loader2, 
+  ShoppingBag
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { Timestamp } from 'firebase/firestore';
@@ -317,22 +318,13 @@ export default function Inventario() {
 
           {/* --- Empty State --- */}
           {filteredProductos.length === 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              className="text-center py-20"
-            >
-              <Package className="w-16 h-16 text-white/10 mx-auto mb-4" />
-              <p className="text-white/50 text-lg">No se encontraron productos</p>
-              {(searchTerm || selectedCategory !== 'all') && (
-                <button
-                  onClick={() => { setSearchTerm(''); setSelectedCategory('all'); }}
-                  className="mt-4 text-pedal-primary-glow hover:underline"
-                >
-                  Limpiar filtros
-                </button>
-              )}
-            </motion.div>
+            <div className="flex flex-col items-center justify-center py-24 bg-pedal-bgSurface border border-white/5 rounded-[2rem] text-center animate-fade-up mt-">
+                        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                            <ShoppingBag size={32} className="text-white/20" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-4 font-syne">Tus Productos estan vacíos</h2>
+                        <p className="text-white/50 mb-8">Parece que aún no has añadido ningun producto.</p>
+                    </div>
           )}
         </div>
       </div>

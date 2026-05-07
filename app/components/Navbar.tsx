@@ -57,7 +57,7 @@ export default function Navbar() {
 
     return (
         <>
-            <header className="fixed top-0 left-0 w-full z-50 py-4 transition-all duration-300">
+            <header className="fixed text-white top-0 left-0 w-full z-50 py-4 transition-all duration-300">
             <Container>
                 <nav className="w-full py-3 px-8 flex items-center justify-between border bg-pedal-bgMain
                     border-pedal-primary-glow/20 rounded-full">
