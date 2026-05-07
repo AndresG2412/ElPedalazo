@@ -7,7 +7,7 @@ import Container from './Container';
 export default function Hero() {
   return (
     <section
-      className="relative w-full h-[90vh] min-[1201px]:h-[120vh] overflow-hidden px-4 md:px-8 xl:px-5"
+      className="relative w-full h-[90vh] min-[1201px]:h-screen overflow-hidden px-4 md:px-8 xl:px-5"
       id='inicio'
     >
       {/* Imagen de fondo */}
@@ -31,18 +31,11 @@ export default function Hero() {
       />
 
       {/* Contenido */}
-      <div className="relative z-10 flex items-center h-[90vh] min-[1201px]:h-[120vh] pt-20 md:pt-24 xl:pt-16">
+      <div className="relative z-10 flex items-center h-[90vh] min-[1201px]:h-[100vh] pt-20 md:pt-24 xl:pt-2">
         <Container>
-          {/*
-            En tablet usamos grid de 2 columnas:
-            - col izquierda: headline + cta
-            - col derecha: los 3 stats
-            En móvil y desktop se mantiene el layout original (stack + absolute)
-          */}
-          <div className="md:grid md:grid-cols-[1fr_auto] md:gap-x-12 xl:block">
+          <div className="relative w-full md:grid md:grid-cols-[1fr_auto] md:gap-x-12 xl:block">
 
-            {/* Columna izquierda (o bloque único en móvil/desktop) */}
-            <div className="max-w-[800px]">
+            <div className="">
 
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-0 py-1 mb-6 md:mb-8 text-xs font-bold tracking-[0.25em] uppercase text-pedal-primary animate-fade-up-anim">
@@ -124,19 +117,14 @@ export default function Hero() {
               </div>
             </div>
 
-            {/*
-              Stats:
-              - Móvil: fila horizontal con mt-16 (igual que antes)
-              - Tablet (md → xl): columna vertical alineada al centro-derecha en el grid
-              - Desktop (xl+): absolute posicionado como antes
-            */}
+            {/* numeros indicativos */}
             <div className='
               mt-14 md:mt-0
               flex md:flex-col
               gap-6 md:gap-8 xl:gap-10
               justify-between md:justify-center
               md:self-center md:pl-8 md:border-l md:border-white/15
-              xl:mt-0 xl:absolute xl:right-12 xl:top-72 xl:border-0 xl:pl-0
+              xl:mt-0 xl:absolute xl:right-0 xl:top-1/2 xl:-translate-y-1/2 xl:border-0 xl:pl-0
               animate-fade-up-anim [animation-delay:700ms]
             '>
               {[

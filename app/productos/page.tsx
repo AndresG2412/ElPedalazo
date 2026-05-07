@@ -7,6 +7,7 @@ import { getAllCategories, Category } from '@/firebase/categories';
 import { Loader2 } from 'lucide-react';
 import Container from '@/app/components/Container';
 import Swal from 'sweetalert2';
+import Footer from '../components/Footer';
 
 export default function Productos() {
   const [productos, setProductos] = useState<Product[]>([]);
@@ -60,20 +61,26 @@ export default function Productos() {
 
   if (loading) {
     return (
-      <Container>
-        <div className="min-h-screen bg-pedal-bgMain pt-32 flex flex-col items-center justify-center">
+      <main className="flex flex-col min-h-screen bg-pedal-bgMain">
+        <div className="grow flex flex-col items-center justify-center pt-32">
           <Loader2 className="w-12 h-12 text-pedal-primary-glow animate-spin mb-4" />
           <p className="text-white/60 animate-pulse font-syne">Preparando el catálogo...</p>
         </div>
-      </Container>
+        <Footer />
+      </main>
     );
   }
 
   return (
-    <ProductListCliente 
-      productos={productos}
-      categorias={categorias}
-      onAddToCart={handleAddToCart}
-    />
+    <main className="flex flex-col min-h-screen bg-pedal-bgMain">
+      <div className="grow">
+        <ProductListCliente 
+          productos={productos}
+          categorias={categorias}
+          onAddToCart={handleAddToCart}
+        />
+      </div>
+      <Footer />
+    </main>
   );
 }

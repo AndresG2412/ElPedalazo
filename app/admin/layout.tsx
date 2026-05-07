@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -22,17 +23,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             }
 
             let isUserAdmin = false;
-            const adminEmails = ["cgaviria930@gmail.com", "andres@elpedalazo.com"];
             
-            if (adminEmails.includes(currentUser.email || "")) {
-                isUserAdmin = true;
+            try {
+                if (currentUser.email) {
+                    // Consultamos en Firebase si el correo está en la colección de admins
+                    const email = currentUser.email.toLowerCase().trim();
+                    const adminDoc = await getDoc(doc(db, "admins", email));
+                    if (adminDoc.exists()) {
+                        isUserAdmin = true;
+                    }
+                }
+            } catch (error) {
+                console.error("Error consultando el administrador en Firebase:", error);
             }
 
-            try {
-                const adminDoc = await getDoc(doc(db, "admins", currentUser.uid));
-                if (adminDoc.exists()) isUserAdmin = true;
-            } catch (error) {
-                // Silencioso: Fallback a lista manual
+            // Fallback de seguridad para los administradores principales
+            // (Evita que se queden sin acceso si la base de datos se vacía)
+            const adminEmails = ["cgaviria930@gmail.com", "mr608040@gmail.com"];
+            if (!isUserAdmin && adminEmails.includes(currentUser.email || "")) {
+                isUserAdmin = true;
             }
 
             setIsAdmin(isUserAdmin);
