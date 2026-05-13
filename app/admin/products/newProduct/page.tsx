@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { getAllCategories, Category } from '@/firebase/categories';
+import { getAllMarcas, Marca } from '@/firebase/marcas';
 import { createProduct, ProductData } from '@/firebase/products'; 
 import Link from 'next/link';
 
@@ -32,6 +33,7 @@ export default function NewProduct() {
     description: '',
     title: '',
     category: '',
+    marca: '',
   });
   
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -39,8 +41,11 @@ export default function NewProduct() {
   const [uploadingImages, setUploadingImages] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [marcas, setMarcas] = useState<Marca[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [isLoadingMarcas, setIsLoadingMarcas] = useState(true);
   const [errorCategories, setErrorCategories] = useState('');
+  const [errorMarcas, setErrorMarcas] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
   
@@ -62,7 +67,22 @@ export default function NewProduct() {
       }
     };
 
+    const loadMarcas = async () => {
+      try {
+        setIsLoadingMarcas(true);
+        const marcasData = await getAllMarcas();
+        setMarcas(marcasData);
+        setErrorMarcas('');
+      } catch (error: any) {
+        console.error('Error loading marcas:', error);
+        setErrorMarcas(error.message || 'Error al cargar las marcas');
+      } finally {
+        setIsLoadingMarcas(false);
+      }
+    };
+
     loadCategories();
+    loadMarcas();
   }, []);
 
   // Función para mostrar alertas con SweetAlert2
@@ -248,6 +268,11 @@ export default function NewProduct() {
       showAlert('Campo requerido', 'Selecciona una categoría', 'warning');
       return;
     }
+
+    if (!formData.marca) {
+      showAlert('Campo requerido', 'Selecciona una marca', 'warning');
+      return;
+    }
     
     if (imageUrls.length === 0) {
       showAlert('Imágenes requeridas', 'Sube al menos una imagen antes de publicar', 'warning');
@@ -269,6 +294,7 @@ export default function NewProduct() {
         stock: Number(formData.stock),
         description: formData.description.trim(),
         category: formData.category,
+        marca: formData.marca,
         images: imageUrls
       };
       
@@ -278,7 +304,7 @@ export default function NewProduct() {
       if (result.success) {
         showAlert('¡Producto creado!', 'El producto se ha publicado exitosamente', 'success');
         // Limpiar formulario
-        setFormData({ price: '', stock: '', description: '', title: '', category: '' });
+        setFormData({ price: '', stock: '', description: '', title: '', category: '', marca: '' });
         setImageFiles([]);
         setImageUrls([]);
         setUploadProgress({});
@@ -486,45 +512,85 @@ export default function NewProduct() {
                 </div>
               </div>
 
-              {/* Categoría */}
-              <div>
-                <label className="block text-white/70 font-syne text-sm font-semibold mb-2">
-                  <Package className="w-4 h-4 inline mr-2 text-pedal-primary-glow" />
-                  Categoría
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl
-                    text-white focus:outline-none focus:border-pedal-primary-glow/50
-                    focus:ring-2 focus:ring-pedal-primary-glow/20 transition-all cursor-pointer"
-                  required
-                  disabled={isLoadingCategories || isSubmitting}
-                >
-                  <option value="" className="bg-pedal-bgSurface">
-                    {isLoadingCategories ? 'Cargando categorías...' : 'Selecciona una categoría'}
-                  </option>
-                  {!isLoadingCategories && categories.map((category) => (
-                    <option 
-                      key={category.id} 
-                      value={category.id}
-                      className="bg-pedal-bgSurface"
-                    >
-                      {category.name}
+              {/* Categoría y Marca en la misma fila */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Categoría */}
+                <div>
+                  <label className="block text-white/70 font-syne text-sm font-semibold mb-2">
+                    <Package className="w-4 h-4 inline mr-2 text-pedal-primary-glow" />
+                    Categoría
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl
+                      text-white focus:outline-none focus:border-pedal-primary-glow/50
+                      focus:ring-2 focus:ring-pedal-primary-glow/20 transition-all cursor-pointer"
+                    required
+                    disabled={isLoadingCategories || isSubmitting}
+                  >
+                    <option value="" className="bg-pedal-bgSurface">
+                      {isLoadingCategories ? 'Cargando categorías...' : 'Selecciona una categoría'}
                     </option>
-                  ))}
-                </select>
-                
-                {errorCategories && (
-                  <p className="text-red-400 text-sm mt-2">{errorCategories}</p>
-                )}
-                
-                {!isLoadingCategories && categories.length === 0 && !errorCategories && (
-                  <p className="text-yellow-400 text-sm mt-2">
-                    No hay categorías disponibles. Por favor, crea una categoría primero.
-                  </p>
-                )}
+                    {!isLoadingCategories && categories.map((category) => (
+                      <option 
+                        key={category.id} 
+                        value={category.id}
+                        className="bg-pedal-bgSurface"
+                      >
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {errorCategories && (
+                    <p className="text-red-400 text-sm mt-2">{errorCategories}</p>
+                  )}
+                </div>
+
+                {/* Marca */}
+                <div>
+                  <label className="block text-white/70 font-syne text-sm font-semibold mb-2">
+                    <Tag className="w-4 h-4 inline mr-2 text-pedal-primary-glow" />
+                    Marca
+                  </label>
+                  <select
+                    value={formData.marca}
+                    onChange={(e) => setFormData({ ...formData, marca: e.target.value })}
+                    className="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl
+                      text-white focus:outline-none focus:border-pedal-primary-glow/50
+                      focus:ring-2 focus:ring-pedal-primary-glow/20 transition-all cursor-pointer"
+                    required
+                    disabled={isLoadingMarcas || isSubmitting}
+                  >
+                    <option value="" className="bg-pedal-bgSurface">
+                      {isLoadingMarcas ? 'Cargando marcas...' : 'Selecciona una marca'}
+                    </option>
+                    {!isLoadingMarcas && marcas.map((marca) => (
+                      <option 
+                        key={marca.id} 
+                        value={marca.id}
+                        className="bg-pedal-bgSurface"
+                      >
+                        {marca.name}
+                      </option>
+                    ))}
+                  </select>
+                  
+                  {errorMarcas && (
+                    <p className="text-red-400 text-sm mt-2">{errorMarcas}</p>
+                  )}
+                </div>
               </div>
+
+              {((!isLoadingCategories && categories.length === 0 && !errorCategories) || 
+                (!isLoadingMarcas && marcas.length === 0 && !errorMarcas)) && (
+                <div className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl">
+                  <p className="text-yellow-400 text-sm">
+                    ⚠️ Asegúrate de tener categorías y marcas creadas antes de subir productos.
+                  </p>
+                </div>
+              )}
 
               {/* Descripción */}
               <div>

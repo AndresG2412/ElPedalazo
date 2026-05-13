@@ -2,41 +2,41 @@
 
 import Container from '@/app/components/Container';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { Loader2, ArrowLeft, Box } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import CategorySearch from '@/app/components/SearchInput';
-import CreateCategoryBtn from '@/app/components/CreateCategoryBtn';
+import MarcaSearch from '@/app/components/SearchInput';
+import CreateMarcaBtn from '@/app/components/CreateMarcaBtn';
 import {
-  getAllCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-  searchCategories,
-} from '@/firebase/categories';
+  getAllMarcas,
+  createMarca,
+  updateMarca,
+  deleteMarca,
+  searchMarcas,
+} from '@/firebase/marcas';
 
-import type { Category } from '@/firebase/categories';
-import CategoryCard from '@/app/components/CategoryCard';
-import CategoryModal from '@/app/components/CategoryModal';
+import type { Marca } from '@/firebase/marcas';
+import MarcaCard from '@/app/components/MarcaCard';
+import MarcaModal from '@/app/components/MarcaModal';
 
-export default function Categories() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
+export default function Marcas() {
+  const [marcas, setMarcas] = useState<Marca[]>([]);
+  const [filteredMarcas, setFilteredMarcas] = useState<Marca[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedMarca, setSelectedMarca] = useState<Marca | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'view' | 'edit' | 'create'>('view');
-  const [formData, setFormData] = useState({ name: '', description: '' });
-  const [formErrors, setFormErrors] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ name: '' });
+  const [formErrors, setFormErrors] = useState({ name: '' });
 
-  const loadCategories = useCallback(async () => {
+  const loadMarcas = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getAllCategories();
-      setCategories(data);
-      setFilteredCategories(data);
+      const data = await getAllMarcas();
+      setMarcas(data);
+      setFilteredMarcas(data);
     } catch (error: any) {
       await Swal.fire({
         title: 'Error',
@@ -52,30 +52,30 @@ export default function Categories() {
   }, []);
 
   useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
+    loadMarcas();
+  }, [loadMarcas]);
 
   useEffect(() => {
-    const searchCategoriesHandler = async () => {
+    const searchMarcasHandler = async () => {
       if (searchTerm.trim() === '') {
-        setFilteredCategories(categories);
+        setFilteredMarcas(marcas);
       } else {
         try {
-          const results = await searchCategories(searchTerm);
-          setFilteredCategories(results);
+          const results = await searchMarcas(searchTerm);
+          setFilteredMarcas(results);
         } catch (error) {
           console.error('Error searching:', error);
         }
       }
     };
 
-    const debounce = setTimeout(searchCategoriesHandler, 300);
+    const debounce = setTimeout(searchMarcasHandler, 300);
     return () => clearTimeout(debounce);
-  }, [searchTerm, categories]);
+  }, [searchTerm, marcas]);
 
   const handleSave = async () => {
     // Reset errors
-    setFormErrors({ name: '', description: '' });
+    setFormErrors({ name: '' });
     
     // Validation
     if (!formData.name.trim()) {
@@ -86,18 +86,18 @@ export default function Categories() {
     try {
       setLoading(true);
       if (modalMode === 'create') {
-        const result = await createCategory(formData);
+        const result = await createMarca(formData);
         if (!result.success) throw new Error(result.error?.message);
-      } else if (modalMode === 'edit' && selectedCategory) {
-        await updateCategory(selectedCategory.id, formData);
+      } else if (modalMode === 'edit' && selectedMarca) {
+        await updateMarca(selectedMarca.id, formData);
       }
       
-      await loadCategories();
+      await loadMarcas();
       setIsModalOpen(false);
       
       await Swal.fire({
         title: 'Éxito',
-        text: `Categoría ${modalMode === 'create' ? 'creada' : 'actualizada'} correctamente.`,
+        text: `Marca ${modalMode === 'create' ? 'creada' : 'actualizada'} correctamente.`,
         icon: 'success',
         background: '#0a0a0a',
         color: '#fff',
@@ -116,10 +116,10 @@ export default function Categories() {
     }
   };
 
-  const handleDelete = async (category: Category) => {
+  const handleDelete = async (marca: Marca) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
-      text: `Vas a eliminar la categoría "${category.name}". Esta acción no se puede deshacer.`,
+      text: `Vas a eliminar la marca "${marca.name}". Esta acción no se puede deshacer.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
@@ -133,12 +133,12 @@ export default function Categories() {
     if (result.isConfirmed) {
       try {
         setLoading(true);
-        await deleteCategory(category.id);
-        await loadCategories();
+        await deleteMarca(marca.id);
+        await loadMarcas();
         
         await Swal.fire({
           title: 'Eliminado',
-          text: 'La categoría ha sido eliminada con éxito.',
+          text: 'La marca ha sido eliminada con éxito.',
           icon: 'success',
           background: '#0a0a0a',
           color: '#fff',
@@ -160,11 +160,10 @@ export default function Categories() {
     }
   };
 
-
-  const handleEditCard = (category: Category) => {
-    setSelectedCategory(category);
+  const handleEditCard = (marca: Marca) => {
+    setSelectedMarca(marca);
     setModalMode('edit');
-    setFormData({ name: category.name, description: category.description || '' });
+    setFormData({ name: marca.name });
     setIsModalOpen(true);
   };
 
@@ -181,7 +180,7 @@ export default function Categories() {
           >
             <div className="flex justify-between items-center">
               <h1 className="font-syne font-bold text-4xl md:text-5xl text-white tracking-tight">
-                Categorías
+                Marcas
               </h1>
               <Link
                 href="/admin"
@@ -193,39 +192,40 @@ export default function Categories() {
             </div>
           </motion.div>
 
-          {/* Barra de búsqueda y botón (Componentes extraídos) */}
+          {/* Barra de búsqueda y botón */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col md:flex-row gap-4 mb-8"
           >
-            <CategorySearch 
+            <MarcaSearch 
               searchTerm={searchTerm} 
               setSearchTerm={setSearchTerm} 
+              placeholder="Buscar marcas..."
             />
-            <CreateCategoryBtn />
+            <CreateMarcaBtn />
           </motion.div>
 
-          {/* Grid de categorías */}
+          {/* Grid de marcas */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <Loader2 className="w-12 h-12 text-pedal-primary-glow animate-spin" />
             </div>
-          ) : filteredCategories.length === 0 ? (
+          ) : filteredMarcas.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 bg-pedal-bgSurface border border-white/5 rounded-4xl text-center animate-fade-up mt-12">
                         <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                            <ShoppingBag size={32} className="text-white/20" />
+                            <Box size={32} className="text-white/20" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-4 font-syne">Tus Categorias estan vacías</h2>
-                        <p className="text-white/50 mb-8">Parece que aún no has añadido ninguna categoria.</p>
+                        <h2 className="text-2xl font-bold text-white mb-4 font-syne">No hay marcas registradas</h2>
+                        <p className="text-white/50 mb-8">Parece que aún no has añadido ninguna marca.</p>
                     </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <AnimatePresence>
-                {filteredCategories.map((category, index) => (
-                  <CategoryCard
-                    key={category.id}
-                    category={category}
+                {filteredMarcas.map((marca, index) => (
+                  <MarcaCard
+                    key={marca.id}
+                    marca={marca}
                     index={index}
                     onEdit={handleEditCard}
                     onDelete={handleDelete}
@@ -236,10 +236,10 @@ export default function Categories() {
           )}
         </div>
 
-        <CategoryModal
+        <MarcaModal
           isOpen={isModalOpen}
           modalMode={modalMode}
-          selectedCategory={selectedCategory}
+          selectedMarca={selectedMarca}
           formData={formData}
           formErrors={formErrors}
           onClose={() => setIsModalOpen(false)}

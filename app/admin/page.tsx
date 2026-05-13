@@ -1,11 +1,13 @@
 import Container from "../components/Container";
-import { LayoutDashboard, PlusCircle, Package, Users, Settings } from "lucide-react";
+import { LayoutDashboard, PlusCircle, Package, Users, Tag, Text } from "lucide-react";
 import Link from "next/link";
 
 export default function AdminPage() {
     const adminActions = [
         { title: "Productos", icon: PlusCircle, href: "/admin/products", color: "text-pedal-primary-glow" },
         { title: "Categorías", icon: Package, href: "/admin/categories", color: "text-white" },
+        { title: "Marcas", icon: Tag, href: "/admin/marcas", color: "text-white" },
+        { title: "Automático", icon: Text, href: "/admin/docsia", color: "text-white" },
         { title: "Usuarios", icon: Users, href: "/admin/users", color: "text-white" },
     ];
 
@@ -27,10 +29,14 @@ export default function AdminPage() {
                         <Link 
                             key={index} 
                             href={action.href}
-                            className="group p-8 bg-pedal-bgSurface border border-white/5 rounded-[2rem] hover:border-pedal-primary-glow/30 transition-all hover:translate-y-[-4px]"
+                            className="group p-8 bg-pedal-bgSurface border border-white/5 rounded-4xl hover:border-pedal-primary-glow/30 transition-all hover:translate-y-[-4px]"
                         >
-                            <action.icon className={`${action.color} mb-6 group-hover:scale-110 transition-transform`} size={32} />
-                            <h3 className="text-xl font-bold text-white mb-2">{action.title}</h3>
+                            <div className="flex items-center justify-between gap-4 mb-6">
+                                <div className="flex items-center gap-4">
+                                    <action.icon className={`${action.color} group-hover:scale-110 transition-transform`} size={32} />
+                                    <h3 className="text-xl font-bold text-white">{action.title}</h3>
+                                </div>
+                            </div>
                             <p className="text-white/40 text-sm">Gestionar sección de {action.title.toLowerCase()}.</p>
                         </Link>
                     ))}

@@ -31,7 +31,7 @@ export default function Hero() {
       />
 
       {/* Contenido */}
-      <div className="relative z-10 flex items-center h-[90vh] min-[1201px]:h-[100vh] pt-20 md:pt-24 xl:pt-2">
+      <div className="relative z-10 flex items-center h-[90vh] min-[1201px]:h-screen pt-20 md:pt-24 xl:pt-2">
         <Container>
           <div className="relative w-full md:grid md:grid-cols-[1fr_auto] md:gap-x-12 xl:block">
 

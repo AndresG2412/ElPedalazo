@@ -22,6 +22,7 @@ export interface ProductData {
   stock: number;
   description: string;
   category: string;
+  marca: string;
   images: string[];
 }
 
@@ -41,6 +42,7 @@ export interface CreateProductResult {
     stock: number;
     description: string;
     category: string;
+    marca: string;
     images: string[];
   };
   error?: {
@@ -106,6 +108,16 @@ export const createProduct = async (
       };
     }
 
+    if (!data.marca) {
+      return {
+        success: false,
+        error: {
+          code: 'REQUIRED_MARCA',
+          message: "La marca es requerida."
+        }
+      };
+    }
+
     if (!data.images || data.images.length === 0) {
       return {
         success: false,
@@ -145,6 +157,7 @@ export const createProduct = async (
       stock: Number(data.stock),
       description: data.description.trim(),
       category: data.category,
+      marca: data.marca,
       images: data.images, // URLs de Cloudinary
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -166,6 +179,7 @@ export const createProduct = async (
         stock: Number(data.stock),
         description: data.description.trim(),
         category: data.category,
+        marca: data.marca,
         images: data.images,
       }
     };
@@ -297,6 +311,7 @@ export const updateProduct = async (
     if (data.stock !== undefined) updateData.stock = Number(data.stock); // ✅ Añadido stock
     if (data.description !== undefined) updateData.description = data.description.trim();
     if (data.category !== undefined) updateData.category = data.category;
+    if (data.marca !== undefined) updateData.marca = data.marca;
     if (data.images !== undefined) updateData.images = data.images;
 
     await updateDoc(docRef, updateData);

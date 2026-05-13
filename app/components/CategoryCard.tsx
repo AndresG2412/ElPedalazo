@@ -19,42 +19,41 @@ export default function CategoryCard({ category, index, onEdit, onDelete }: Cate
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="bg-pedal-bgSurface rounded-4xl border border-white/5 hover:border-pedal-primary-glow/30 transition-all duration-300 overflow-hidden cursor-pointer"
+      className="bg-pedal-bgSurface rounded-4xl border border-white/5 overflow-hidden cursor-default"
     >
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
+      <div className="px-6 py-3">
+        <div className="flex justify-between items-start mb-2">
           <h3 className="font-syne font-bold text-xl text-white">
             {category.name}
           </h3>
-          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+        </div>
+        <p className="text-white/70 line-clamp-2 mb-3">
+          {category.description || 'Sin descripción'}
+        </p>
+        
+        {/* botones de funciones */}
+        <div className="flex gap-2 justify-between items-center mt-2" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(category);
               }}
-              className="p-[15px] rounded-lg hover:bg-white/10 transition-colors"
+              className="px-2 py-2 border flex gap-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors hover:text-pedal-primary-glow"
             >
-              <Edit2 className="w-5 h-5 text-white/60 hover:text-pedal-primary-glow" />
+              <Edit2 className="w-5 h-5" />
+              <span className="">Editar</span>
             </button>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(category);
               }}
-              className="p-[15px] rounded-lg hover:bg-white/10 transition-colors"
+              className="px-2 py-2 border flex gap-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors hover:text-red-500"
             >
-              <Trash2 className="w-5 h-5 text-white/60 hover:text-red-500" />
+              <Trash2 className="w-5 h-5" />
+              <span className="">Eliminar</span>
             </button>
           </div>
-        </div>
-        <p className="text-white/70 line-clamp-3">
-          {category.description || 'Sin descripción'}
-        </p>
-        {category.createdAt && (
-          <p className="text-white/30 text-sm mt-4">
-            Creado: {new Date(category.createdAt.seconds * 1000).toLocaleDateString()}
-          </p>
-        )}
       </div>
     </motion.div>
   );
