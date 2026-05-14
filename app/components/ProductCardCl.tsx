@@ -74,18 +74,18 @@ export default function ProductCardCl({ producto, index, onAddToCart }: ProductC
       {/* Cuerpo */}
       <div className="flex flex-col gap-2 px-3 pt-4 pb-3 flex-1">
         {/* Categoría */}
-        <span className="text-pedal-primary-glow text-[11px] font-bold tracking-widest uppercase opacity-80">
+        <span className="text-pedal-primary-glow text-xs font-bold tracking-widest uppercase opacity-80">
           {producto.category}
         </span>
 
         {/* Título completo sin truncar */}
-        <h3 className="font-syne font-bold text-xl text-white leading-snug">
+        <h3 className="font-syne line-clamp-2 font-bold text-base text-white leading-snug">
           {producto.title}
         </h3>
 
         {/* Footer: precio + botón carrito en la misma fila */}
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/6">
-          <span className="text-pedal-primary-glow font-extrabold text-xl tracking-tight">
+          <span className="text-pedal-primary-glow font-extrabold text-lg tracking-tight">
             ${producto.price.toLocaleString()}
           </span>
 

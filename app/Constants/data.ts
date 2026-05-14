@@ -27,7 +27,7 @@ export const NAV_LINKS = [
     { label: 'Inicio', href: '/#inicio' },
     { label: 'Categorias', href: '/#categorias' },
     { label: 'Productos', href: '/productos' },
-    { label: 'Para tu Carro!', href: '/#carro' },
+    // { label: 'Para tu Carro!', href: '/#carro' },
     { label: 'Servicios', href: '/#servicios' },
     { label: 'Contacto', href: '/#contacto' },
 ];

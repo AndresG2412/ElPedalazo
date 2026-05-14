@@ -48,6 +48,20 @@ export default function EditProductModal({ isOpen, producto, onClose, onSave }: 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        title: producto.title,
+        description: producto.description,
+        price: producto.price,
+        stock: producto.stock,
+        category: producto.category,
+      });
+      setImages(producto.images ?? []);
+      setError(null);
+    }
+  }, [producto, isOpen]);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoadingCategories(true);

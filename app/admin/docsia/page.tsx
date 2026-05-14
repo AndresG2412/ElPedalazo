@@ -43,25 +43,67 @@ export default function DocsIAPage() {
     setLogs(prev => [...prev, `${new Date().toLocaleTimeString()} - ${message}`]);
   };
 
-  const parseCSV = (text: string) => {
-    const lines = text.split('\n');
-    if (lines.length < 2) return [];
+  /**
+   * Parser CSV robusto con state machine.
+   * Maneja correctamente campos entre comillas que contienen el delimitador
+   * (ej: imágenes base64 con "data:image/jpeg;base64,...").
+   * La regex de lookahead falla con strings muy largos (>50KB por campo).
+   */
+  const parseCSV = (text: string): any[] => {
+    // ── Detectar delimitador en la primera línea ──
+    const firstNewline = text.indexOf('\n');
+    const firstLine = firstNewline >= 0 ? text.slice(0, firstNewline) : text;
+    const delimiter = firstLine.includes(';') ? ';' : ',';
 
-    // Detectar el delimitador basado en la primera línea
-    const delimiter = lines[0].includes(';') ? ';' : ',';
-    // Expresión regular para separar por el delimitador pero ignorando los que están dentro de comillas
-    const splitRegex = new RegExp(`${delimiter}(?=(?:(?:[^"]*"){2})*[^"]*$)`);
+    // ── Parser de una fila: state machine carácter a carácter ──
+    const parseRow = (line: string): string[] => {
+      const fields: string[] = [];
+      let current = '';
+      let inQuotes = false;
 
-    const headers = lines[0].split(splitRegex).map(h => h.trim().replace(/^"|"$/g, '').replace(/""/g, '"'));
-    const data = [];
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            // comilla doble escapada ""
+            if (i + 1 < line.length && line[i + 1] === '"') {
+              current += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            current += ch;
+          }
+        } else {
+          if (ch === '"') {
+            inQuotes = true;
+          } else if (ch === delimiter) {
+            fields.push(current.trim());
+            current = '';
+          } else {
+            current += ch;
+          }
+        }
+      }
+      fields.push(current.trim());
+      return fields;
+    };
 
-    for (let i = 1; i < lines.length; i++) {
-      if (!lines[i].trim()) continue;
-      const values = lines[i].split(splitRegex);
+    // ── Dividir en líneas (respetando posibles \r\n) ──
+    const rawLines = text.split(/\r?\n/);
+    if (rawLines.length < 2) return [];
+
+    const headers = parseRow(rawLines[0]);
+    const data: any[] = [];
+
+    for (let i = 1; i < rawLines.length; i++) {
+      const line = rawLines[i];
+      if (!line.trim()) continue;
+      const values = parseRow(line);
       const obj: any = {};
-      
-      headers.forEach((header, index) => {
-        obj[header] = values[index] ? values[index].trim().replace(/^"|"$/g, '').replace(/""/g, '"') : '';
+      headers.forEach((header, idx) => {
+        obj[header] = values[idx] !== undefined ? values[idx] : '';
       });
       data.push(obj);
     }
@@ -213,23 +255,50 @@ export default function DocsIAPage() {
     }
   };
 
+  /**
+   * Convierte un data URI base64 a Blob binario.
+   * Cloudinary falla con "Could not decode base64" cuando se envía
+   * el data URI como string en FormData — necesita un File/Blob real.
+   */
+  const dataURItoBlob = (dataURI: string): Blob => {
+    const parts = dataURI.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    const bstr = atob(parts[1]);
+    const u8arr = new Uint8Array(bstr.length);
+    for (let i = 0; i < bstr.length; i++) {
+      u8arr[i] = bstr.charCodeAt(i);
+    }
+    return new Blob([u8arr], { type: mime });
+  };
+
   const uploadImageToCloudinary = async (fileOrUrl: string): Promise<string> => {
     const formData = new FormData();
-    formData.append('file', fileOrUrl);
-    // Configuración Cloudinary extraída de newProduct
-    formData.append('upload_preset', 'El Pedalazo'); 
-    
+
+    if (fileOrUrl.startsWith('data:')) {
+      // Convertir data URI → Blob binario para evitar "Could not decode base64"
+      const blob = dataURItoBlob(fileOrUrl);
+      // Detectar extensión del MIME type (ej: image/webp -> webp)
+      const ext = blob.type.split('/')[1] || 'jpg';
+      formData.append('file', blob, `product.${ext}`);
+    } else {
+      // URL http/https: Cloudinary la descarga directamente
+      formData.append('file', fileOrUrl);
+    }
+
+    formData.append('upload_preset', 'El Pedalazo');
+
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/duwosb0hu/image/upload`,
         { method: 'POST', body: formData }
       );
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error?.message || 'Error al subir imagen');
       }
-      
+
       const data = await response.json();
       return data.secure_url;
     } catch (error) {
@@ -289,6 +358,7 @@ Precio: ${cleanPrice}`;
       // Crear producto en Firebase
       try {
         let imageUrl = 'https://via.placeholder.com/500?text=Sin+Imagen';
+        // Acepta data:image/ (que incluye webp) o URLs http
         if (item.imagen && (item.imagen.startsWith('data:image/') || item.imagen.startsWith('http'))) {
           try {
             addLog(`Subiendo imagen de ${item.nombre} a Cloudinary...`);

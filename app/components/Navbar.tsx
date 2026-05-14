@@ -27,11 +27,21 @@ export default function Navbar() {
     const sidebarRef = useRef<HTMLDivElement>(null);
     const handleNavClick = useSmoothScroll();
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [user, setUser] = useState<FirebaseUser | null>(null);
+    const [user, setUser] = useState<any>(null);
 
     useEffect(() => {
+        // Cargar sesión manual si existe
+        const savedClient = localStorage.getItem("cliente_manual");
+        if (savedClient) {
+            setUser(JSON.parse(savedClient));
+        }
+
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
+            if (currentUser) {
+                setUser(currentUser);
+            } else if (!savedClient) {
+                setUser(null);
+            }
         });
         return () => unsubscribe();
     }, []);
@@ -81,10 +91,7 @@ export default function Navbar() {
                     <div className='flex items-center gap-x-3'>
                         {/* Iconos desktop */}
                         <div className='hidden min-[1201px]:flex items-center gap-x-3'>
-                            <button className='hover:scale-110 transition-transform cursor-pointer'>
-                                <Search />
-                            </button>
-                            <Link href="/carrito" className='flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'>
+                           <Link href="/carrito" className='flex items-center justify-center hover:scale-110 transition-transform cursor-pointer border border-white/30 rounded-full p-2'>
                                 <ShoppingCart />
                             </Link>
                             <button 

@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Edit2, Trash2 } from 'lucide-react';
 import type { Category } from '@/firebase/categories';
-import { p } from 'framer-motion/client';
 
 interface CategoryCardProps {
   category: Category;
@@ -15,46 +14,38 @@ interface CategoryCardProps {
 export default function CategoryCard({ category, index, onEdit, onDelete }: CategoryCardProps) {
   return (
     <motion.div
-      key={category.id}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="bg-pedal-bgSurface rounded-4xl border border-white/5 overflow-hidden cursor-default"
+      className="bg-pedal-bgSurface rounded-3xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all duration-300"
     >
-      <div className="px-6 py-3">
+      <div className="p-6">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-syne font-bold text-xl text-white">
+          <h3 className="font-syne font-bold text-xl text-white group-hover:text-pedal-primary-glow transition-colors">
             {category.name}
           </h3>
         </div>
-        <p className="text-white/70 line-clamp-2 mb-3">
+        <p className="text-white/50 text-sm line-clamp-2 mb-6 h-10">
           {category.description || 'Sin descripción'}
         </p>
         
-        {/* botones de funciones */}
-        <div className="flex gap-2 justify-between items-center mt-2" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(category);
-              }}
-              className="px-2 py-2 border flex gap-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors hover:text-pedal-primary-glow"
-            >
-              <Edit2 className="w-5 h-5" />
-              <span className="">Editar</span>
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(category);
-              }}
-              className="px-2 py-2 border flex gap-2 rounded-lg text-white/70 hover:bg-white/10 transition-colors hover:text-red-500"
-            >
-              <Trash2 className="w-5 h-5" />
-              <span className="">Eliminar</span>
-            </button>
-          </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => onEdit(category)}
+            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white/70 hover:bg-white/10 hover:text-white hover:border-white/20 transition-all duration-200"
+          >
+            <Edit2 className="w-4 h-4" />
+            <span className="text-sm font-medium">Editar</span>
+          </button>
+          <button
+            onClick={() => onDelete(category)}
+            className="flex items-center justify-center p-2.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200"
+            title="Eliminar"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );
-}
+}
