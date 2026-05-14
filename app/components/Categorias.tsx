@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Container from "./Container";
 import { CATEGORIAS } from "@/app/Constants/data";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import * as motion from "framer-motion/client";
 
 export default function Categorias() {
   return (
@@ -107,6 +110,26 @@ export default function Categorias() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Botón Ver Productos */}
+        <div className="mt-12 md:mt-16 flex justify-center">
+          <Link 
+            href="/productos"
+            className="group relative flex items-center gap-3 px-8 py-4 bg-pedal-primary-glow text-black font-syne font-black text-lg rounded-2xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-pedal-primary-glow/20"
+          >
+            VER PRODUCTOS
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ 
+                duration: 1, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            >
+              <ArrowRight size={22} strokeWidth={3} />
+            </motion.div>
+          </Link>
         </div>
       </Container>
     </section>

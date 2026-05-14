@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X } from 'lucide-react';
 import Container from './Container';
 import Link from 'next/link';
 import { NAV_LINKS } from '../Constants/data';
@@ -102,15 +102,6 @@ export default function Navbar() {
                             </button>
 
                         </div>
-
-                        {/* Botón Search móvil */}
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className='block min-[1201px]:hidden hover:scale-110 transition-transform cursor-pointer'
-                            aria-label="Buscar"
-                        >
-                            <Search size={22} />
-                        </button>
 
                         {/* Botón hamburguesa */}
                         <button

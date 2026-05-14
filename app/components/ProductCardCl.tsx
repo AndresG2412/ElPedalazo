@@ -99,7 +99,7 @@ export default function ProductCardCl({ producto, index, onAddToCart }: ProductC
             }`}
           >
             <ShoppingCart className="w-4 h-4" />
-            Carrito
+            <p className='hidden md:block'>Carrito</p>
           </button>
         </div>
       </div>
