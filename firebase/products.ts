@@ -206,33 +206,64 @@ export const createProduct = async (
   }
 };
 
+// Caché local para productos
+let productsCache: Product[] | null = null;
+let fetchProductsPromise: Promise<Product[]> | null = null;
+
 /**
- * Obtiene todos los productos ordenados por fecha de creación
+ * Inicia la carga de productos en segundo plano (prefetch)
  */
-export const getAllProducts = async (): Promise<Product[]> => {
-  try {
-    const productosRef = collection(db, "productos");
-    const q = query(productosRef, orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-
-    const products: Product[] = [];
-    querySnapshot.forEach((doc) => {
-      products.push({
-        id: doc.id,
-        ...doc.data()
-      } as Product);
-    });
-
-    return products;
-  } catch (error: any) {
-    console.error("Error obteniendo productos:", error);
-
-    if (error.code === 'permission-denied') {
-      throw new Error("No tienes permisos para ver los productos.");
-    }
-
-    throw new Error("No se pudieron cargar los productos.");
+export const prefetchProducts = () => {
+  if (!productsCache && !fetchProductsPromise) {
+    getAllProducts().catch(err => console.error("Error prefetching products:", err));
   }
+};
+
+/**
+ * Obtiene todos los productos ordenados por fecha de creación (con soporte de caché)
+ */
+export const getAllProducts = async (forceRefresh = false): Promise<Product[]> => {
+  // Retornar caché si existe y no forzamos recarga
+  if (productsCache && !forceRefresh) {
+    return productsCache;
+  }
+
+  // Si ya hay una petición en curso, retornarla para no duplicar peticiones
+  if (fetchProductsPromise && !forceRefresh) {
+    return fetchProductsPromise;
+  }
+
+  fetchProductsPromise = (async () => {
+    try {
+      const productosRef = collection(db, "productos");
+      const q = query(productosRef, orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+
+      const products: Product[] = [];
+      querySnapshot.forEach((doc) => {
+        products.push({
+          id: doc.id,
+          ...doc.data()
+        } as Product);
+      });
+
+      productsCache = products;
+      return products;
+    } catch (error: any) {
+      console.error("Error obteniendo productos:", error);
+
+      if (error.code === 'permission-denied') {
+        throw new Error("No tienes permisos para ver los productos.");
+      }
+
+      throw new Error("No se pudieron cargar los productos.");
+    } finally {
+      // Limpiar la promesa una vez finalizada
+      fetchProductsPromise = null;
+    }
+  })();
+
+  return fetchProductsPromise;
 };
 
 /**

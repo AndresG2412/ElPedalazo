@@ -7,6 +7,8 @@ import { NAV_LINKS } from '../Constants/data';
 import AuthModal from './AuthModal';
 import { auth } from '@/firebase/config';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { prefetchProducts } from '@/firebase/products';
+import { prefetchCategories } from '@/firebase/categories';
 
 
 function useSmoothScroll() {
@@ -43,6 +45,11 @@ export default function Navbar() {
                 setUser(null);
             }
         });
+
+        // Iniciar precarga de datos en segundo plano
+        prefetchProducts();
+        prefetchCategories();
+
         return () => unsubscribe();
     }, []);
 

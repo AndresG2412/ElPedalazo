@@ -112,33 +112,61 @@ export const createCategory = async (data: CategoryData): Promise<CreateCategory
   }
 };
 
+// Caché local para categorías
+let categoriesCache: Category[] | null = null;
+let fetchCategoriesPromise: Promise<Category[]> | null = null;
+
 /**
- * Obtiene todas las categorías ordenadas por fecha de creación
+ * Inicia la carga de categorías en segundo plano (prefetch)
  */
-export const getAllCategories = async (): Promise<Category[]> => {
-  try {
-    const categoriasRef = collection(db, "categorias");
-    const q = query(categoriasRef, orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-    
-    const categories: Category[] = [];
-    querySnapshot.forEach((doc) => {
-      categories.push({
-        id: doc.id,
-        ...doc.data()
-      } as Category);
-    });
-    
-    return categories;
-  } catch (error: any) {
-    console.error("Error obteniendo categorías:", error);
-    
-    if (error.code === 'permission-denied') {
-      throw new Error("No tienes permisos para ver las categorías.");
-    }
-    
-    throw new Error("No se pudieron cargar las categorías.");
+export const prefetchCategories = () => {
+  if (!categoriesCache && !fetchCategoriesPromise) {
+    getAllCategories().catch(err => console.error("Error prefetching categories:", err));
   }
+};
+
+/**
+ * Obtiene todas las categorías ordenadas por fecha de creación (con soporte de caché)
+ */
+export const getAllCategories = async (forceRefresh = false): Promise<Category[]> => {
+  if (categoriesCache && !forceRefresh) {
+    return categoriesCache;
+  }
+
+  if (fetchCategoriesPromise && !forceRefresh) {
+    return fetchCategoriesPromise;
+  }
+
+  fetchCategoriesPromise = (async () => {
+    try {
+      const categoriasRef = collection(db, "categorias");
+      const q = query(categoriasRef, orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      
+      const categories: Category[] = [];
+      querySnapshot.forEach((doc) => {
+        categories.push({
+          id: doc.id,
+          ...doc.data()
+        } as Category);
+      });
+      
+      categoriesCache = categories;
+      return categories;
+    } catch (error: any) {
+      console.error("Error obteniendo categorías:", error);
+      
+      if (error.code === 'permission-denied') {
+        throw new Error("No tienes permisos para ver las categorías.");
+      }
+      
+      throw new Error("No se pudieron cargar las categorías.");
+    } finally {
+      fetchCategoriesPromise = null;
+    }
+  })();
+
+  return fetchCategoriesPromise;
 };
 
 /**

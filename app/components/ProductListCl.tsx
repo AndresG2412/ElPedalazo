@@ -147,33 +147,32 @@ export default function ProductListCliente({
             {/* Paginación Refinada */}
             {totalPages > 1 && (
               <div className="flex flex-col items-center gap-6 mt-16">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="p-3 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
+                    className="p-2 sm:p-3 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
 
-                  <div className="flex gap-2">
+                  <div className="flex gap-1 sm:gap-2">
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                       const isCurrent = currentPage === page;
-                      // Lógica para mostrar solo algunas páginas si hay muchas
-                      if (
-                        page === 1 ||
-                        page === totalPages ||
-                        (page >= currentPage - 1 && page <= currentPage + 1)
-                      ) {
+                      const isAdjacent = page >= currentPage - 1 && page <= currentPage + 1;
+                      const isExtreme = page === 1 || page === totalPages;
+
+                      // Mostrar solo si es actual o adyacente, O si es extremo y estamos en desktop
+                      if (isAdjacent || isExtreme) {
                         return (
                           <button
                             key={page}
                             onClick={() => goToPage(page)}
-                            className={`w-12 h-12 rounded-xl font-bold transition-all ${
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl font-bold transition-all ${
                               isCurrent
                                 ? 'bg-pedal-primary-glow text-black shadow-lg shadow-pedal-primary-glow/20'
                                 : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10'
-                            }`}
+                            } ${isExtreme && !isAdjacent ? 'hidden sm:flex items-center justify-center' : 'flex items-center justify-center'}`}
                           >
                             {page}
                           </button>
@@ -182,7 +181,7 @@ export default function ProductListCliente({
                         page === currentPage - 2 ||
                         page === currentPage + 2
                       ) {
-                        return <span key={page} className="text-white/20 self-end mb-3">...</span>;
+                        return <span key={page} className="hidden sm:block text-white/20 self-end mb-2 sm:mb-3">...</span>;
                       }
                       return null;
                     })}
@@ -191,7 +190,7 @@ export default function ProductListCliente({
                   <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="p-3 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
+                    className="p-2 sm:p-3 rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

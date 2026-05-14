@@ -156,32 +156,32 @@ export default function Carrito() {
                         {/* List */}
                         <div className="lg:col-span-2 flex flex-col gap-y-2">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex items-center gap-x-6 p-6 bg-pedal-bgSurface border border-white/5 rounded-2xl mt-12">
-                                    <div className="w-24 h-24 bg-white/5 rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                <div key={item.id} className="flex items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-pedal-bgSurface border border-white/5 rounded-2xl mt-6 sm:mt-12 w-full max-w-full overflow-hidden">
+                                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white/5 rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center">
                                         {item.images && item.images[0] ? (
                                             <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
                                         ) : (
                                             <Package className="w-8 h-8 text-white/20" />
                                         )}
                                     </div>
-                                    <div className="flex-grow">
-                                        <h3 className="text-white font-bold text-lg leading-tight">{item.title}</h3>
-                                        <p className="text-pedal-primary-glow/80 text-sm font-semibold tracking-wider uppercase mt-1">{item.category}</p>
-                                        <div className="mt-4 flex items-center gap-4">
-                                            <div className="flex items-center border border-white/10 rounded-lg">
-                                                <button onClick={() => updateQuantity(item.id, -1)} className="p-2 hover:text-pedal-primary-glow transition-colors"><Minus size={16} /></button>
-                                                <span className="px-4 text-white font-medium">{item.quantity}</span>
-                                                <button onClick={() => updateQuantity(item.id, 1)} className="p-2 hover:text-pedal-primary-glow transition-colors"><Plus size={16} /></button>
+                                    <div className="flex-grow min-w-0">
+                                        <h3 className="text-white font-bold text-base sm:text-lg leading-tight line-clamp-2">{item.title}</h3>
+                                        <p className="text-pedal-primary-glow/80 text-xs sm:text-sm font-semibold tracking-wider uppercase mt-1">{item.category}</p>
+                                        <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-4 flex-wrap">
+                                            <div className="flex items-center border border-white/10 rounded-lg bg-black/20">
+                                                <button onClick={() => updateQuantity(item.id, -1)} className="p-1.5 sm:p-2 hover:text-pedal-primary-glow transition-colors"><Minus size={16} /></button>
+                                                <span className="px-2 sm:px-4 text-white font-medium text-sm sm:text-base">{item.quantity}</span>
+                                                <button onClick={() => updateQuantity(item.id, 1)} className="p-1.5 sm:p-2 hover:text-pedal-primary-glow transition-colors"><Plus size={16} /></button>
                                             </div>
-                                            <button onClick={() => removeItem(item.id)} className="text-red-500/50 hover:text-red-500 transition-colors">
+                                            <button onClick={() => removeItem(item.id)} className="text-red-500/50 hover:text-red-500 transition-colors p-1.5 sm:p-2">
                                                 <Trash2 size={18} />
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-pedal-primary-glow font-bold text-xl">${(item.price * item.quantity).toLocaleString()}</p>
+                                    <div className="text-right flex-shrink-0 ml-auto pl-2">
+                                        <p className="text-pedal-primary-glow font-bold text-lg sm:text-xl">${(item.price * item.quantity).toLocaleString()}</p>
                                         {item.quantity > 1 && (
-                                            <p className="text-white/30 text-xs mt-1">${item.price.toLocaleString()} c/u</p>
+                                            <p className="text-white/30 text-[10px] sm:text-xs mt-1">${item.price.toLocaleString()} c/u</p>
                                         )}
                                     </div>
                                 </div>
