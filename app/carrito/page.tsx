@@ -152,7 +152,7 @@ export default function Carrito() {
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 animate-fade-up">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 animate-fade-up mt-12">
                         {/* List */}
                         <div className="lg:col-span-2 flex flex-col gap-y-2">
                             {cartItems.map((item) => (
